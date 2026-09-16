@@ -8,38 +8,17 @@
     {
       "id": "Hbol",
       "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/plain": ""
-          }
-        }
-      ],
+      "outputs": [],
       "console": []
     },
     {
-      "id": "RgkI",
+      "id": "MJUe",
       "code_hash": "701bf4a4743e5e0361e26999881a5ce9",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/plain": ""
-          }
-        }
-      ],
-      "console": [
-        {
-          "type": "stream",
-          "name": "stdout",
-          "text": "hi\n",
-          "mimetype": "text/plain"
-        }
-      ]
+      "outputs": [],
+      "console": []
     },
     {
-      "id": "MJUe",
+      "id": "vblA",
       "code_hash": "15c0a8a9c8af7c70b8fb474b6c437494",
       "outputs": [
         {
@@ -52,7 +31,7 @@
       "console": []
     },
     {
-      "id": "vblA",
+      "id": "bkHC",
       "code_hash": "b85e11dcf72cc26af974fb5b8b645b08",
       "outputs": [
         {
@@ -65,46 +44,25 @@
       "console": []
     },
     {
-      "id": "yaJj",
+      "id": "lEQa",
       "code_hash": "4a33cfc44acefffc9d716281b7cd54bf",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:18.0\", \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
-          }
-        }
-      ],
-      "console": []
-    },
-    {
-      "id": "TRKI",
-      "code_hash": "04734cdaa1c87230aeca9e21f580de0e",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/plain": ""
-          }
-        }
-      ],
-      "console": [
-        {
-          "type": "stream",
-          "name": "stdout",
-          "text": "Number of freight charges: 5\n",
-          "mimetype": "text/plain"
-        }
-      ]
-    },
-    {
-      "id": "nXcU",
-      "code_hash": null,
       "outputs": [],
       "console": []
     },
     {
-      "id": "lEQa",
+      "id": "PKri",
+      "code_hash": "04734cdaa1c87230aeca9e21f580de0e",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "d6ea6abcc322b34bf34280dd02246c63",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "SFPL",
       "code_hash": "20ebe74a27337fb36cbb4acc57363595",
       "outputs": [
         {
@@ -117,46 +75,25 @@
       "console": []
     },
     {
-      "id": "ZCeA",
+      "id": "BYtC",
       "code_hash": "bf64f13e25f74abe3f8d30053bca8479",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/html": "<pre class='text-xs'>16.75</pre>"
-          }
-        }
-      ],
+      "outputs": [],
       "console": []
     },
     {
-      "id": "MwlA",
+      "id": "RGSE",
       "code_hash": "f588828efbae79e3d292e56d1729fc62",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/html": "<pre class='text-xs'>5</pre>"
-          }
-        }
-      ],
+      "outputs": [],
       "console": []
     },
     {
-      "id": "lsxl",
+      "id": "Kclp",
       "code_hash": "6102414f6de17af77ee465a6ebcce07c",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/html": "<pre class='text-xs'>113.5</pre>"
-          }
-        }
-      ],
+      "outputs": [],
       "console": []
     },
     {
-      "id": "PKri",
+      "id": "emfo",
       "code_hash": "eac25daeca442db175606c0562f487dc",
       "outputs": [
         {
@@ -169,7 +106,7 @@
       "console": []
     },
     {
-      "id": "djob",
+      "id": "Hstk",
       "code_hash": "49a6689943ee4d4ef5f739bf5c34ff78",
       "outputs": [
         {
@@ -182,7 +119,7 @@
       "console": []
     },
     {
-      "id": "Xref",
+      "id": "nWHF",
       "code_hash": "4e32dd019d27a10afa026d1dafa4d470",
       "outputs": [
         {
@@ -195,7 +132,7 @@
       "console": []
     },
     {
-      "id": "SFPL",
+      "id": "iLit",
       "code_hash": "0252721289b9851a26e7db73a903f933",
       "outputs": [
         {
@@ -208,7 +145,7 @@
       "console": []
     },
     {
-      "id": "BYtC",
+      "id": "ZHCJ",
       "code_hash": "1c7f5d35f40512380e4e63a7d3602152",
       "outputs": [
         {
@@ -221,7 +158,7 @@
       "console": []
     },
     {
-      "id": "RGSE",
+      "id": "ROlb",
       "code_hash": "7a6b2b2fcb8cdb9959975cae4f17939e",
       "outputs": [
         {
@@ -234,7 +171,7 @@
       "console": []
     },
     {
-      "id": "Kclp",
+      "id": "qnkX",
       "code_hash": "31c6948dd4c04d91524c2fad845f9b67",
       "outputs": [
         {
@@ -247,7 +184,7 @@
       "console": []
     },
     {
-      "id": "emfo",
+      "id": "TqIu",
       "code_hash": "8f0d830af338a5ea269f9088eb76a9b3",
       "outputs": [
         {
@@ -260,7 +197,7 @@
       "console": []
     },
     {
-      "id": "Hstk",
+      "id": "Vxnm",
       "code_hash": "c174464f13a336a2010a509ef502f291",
       "outputs": [
         {
@@ -273,33 +210,19 @@
       "console": []
     },
     {
-      "id": "NxVJ",
-      "code_hash": "77117966d55e6c215644ea8425ec856c",
-      "outputs": [
-        {
-          "type": "data",
-          "data": {
-            "text/plain": ""
-          }
-        }
-      ],
-      "console": [
-        {
-          "type": "stream",
-          "name": "stdout",
-          "text": "Max freight charge: 36.25\n",
-          "mimetype": "text/plain"
-        }
-      ]
+      "id": "DnEU",
+      "code_hash": "d6ea6abcc322b34bf34280dd02246c63",
+      "outputs": [],
+      "console": []
     },
     {
-      "id": "mCmB",
-      "code_hash": "33d09bf0d56916286fc6447bd2e5e08a",
+      "id": "ulZA",
+      "code_hash": "eba3568c592bae49cc0f452c0a46c3f7",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The code in the cell above determines the maximum value that's part of the \"freight\" set of numbers. It also prints \"New freight charge\" before the output of the max calculation. I am not sure the function of the f\" in the beginning of the code. </span></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The code in the cell above determines the maximum value that's part of the \"freight\" set of numbers. It also prints \"New freight charge\" before the output of the max calculation. I am not sure the function of the f\" in the beginning of the code.</span></span>"
           }
         }
       ],
