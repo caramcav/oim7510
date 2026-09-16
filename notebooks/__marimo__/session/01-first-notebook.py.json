@@ -66,12 +66,12 @@
     },
     {
       "id": "yaJj",
-      "code_hash": "5bc698c463e643f3d476748205e4b77a",
+      "code_hash": "4a33cfc44acefffc9d716281b7cd54bf",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", 18, \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:18.0\", \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
           }
         }
       ],
@@ -96,6 +96,12 @@
           "mimetype": "text/plain"
         }
       ]
+    },
+    {
+      "id": "nXcU",
+      "code_hash": null,
+      "outputs": [],
+      "console": []
     },
     {
       "id": "lEQa",
@@ -261,6 +267,39 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"this-week-ask-for-something-you-cannot-write-yet\">\ud83d\ude80 This Week: Ask For Something You Cannot Write Yet</h1>\n<span class=\"paragraph\">You have five freight charges and three lines of Python. Get a fourth line you could not have written.</span>\n<ol>\n<li><strong>Pick something you want to know about <code>freight</code></strong> that the cells above do not show: the average, the largest, how many are above 22.</li>\n<li><strong>Ask your agent for it.</strong> Show it the list and state what you want back.</li>\n<li><strong>Paste what it gives you into a new cell and run it.</strong> If it errors, keep the error.</li>\n<li><strong>Add a markdown cell underneath.</strong> What does the line do, in your words, and <strong>which part of it are you unsure about?</strong></li>\n<li><strong>Commit and push.</strong></li>\n</ol>\n<span class=\"paragraph\">Week one is too early to account for a line you did not write. Name the part you cannot.</span>\n<span class=\"paragraph\"><em>New to markdown? The <a href=\"https://oim7510.github.io/guides/markdown/\" rel=\"noopener noreferrer\" target=\"_blank\">Markdown guide</a> is a ten-minute read, and we cover it properly next session.</em></span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NxVJ",
+      "code_hash": "77117966d55e6c215644ea8425ec856c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Max freight charge: 36.25\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "mCmB",
+      "code_hash": "33d09bf0d56916286fc6447bd2e5e08a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The code in the cell above determines the maximum value that's part of the \"freight\" set of numbers. It also prints \"New freight charge\" before the output of the max calculation. I am not sure the function of the f\" in the beginning of the code. </span></span>"
           }
         }
       ],

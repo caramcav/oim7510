@@ -65,7 +65,7 @@ def _(mo):
 
 @app.cell
 def _():
-    freight = [16.75, 22.25, 18, 20.25, 36.25]
+    freight = [16.75, 22.25, 18.00, 20.25, 36.25]
     freight
     return (freight,)
 
@@ -73,6 +73,12 @@ def _():
 @app.cell
 def _(freight):
     print(f"Number of freight charges: {len(freight)}")
+    return
+
+
+@app.cell
+def _(freight):
+    print(f"Max freight charge: {max(freight)}")
     return
 
 
@@ -240,6 +246,21 @@ def _(mo):
     Week one is too early to account for a line you did not write. Name the part you cannot.
 
     *New to markdown? The [Markdown guide](https://oim7510.github.io/guides/markdown/) is a ten-minute read, and we cover it properly next session.*
+    """)
+    return
+
+
+@app.cell
+def _(freight):
+    print(f"Max freight charge: {max(freight)}")
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    The code in the cell above determines the maximum value that's part of the "freight" set of numbers. It also prints "New freight charge" before the output of the max calculation. I am not sure the function of the f" in the beginning of the code.
     """)
     return
 
