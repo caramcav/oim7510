@@ -36,6 +36,12 @@ def _():
     return (mo,)
 
 
+@app.cell
+def _():
+    print('hi')
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -59,8 +65,14 @@ def _(mo):
 
 @app.cell
 def _():
-    freight = [16.75, 22.25, 25.00, 20.25, 36.25]
+    freight = [16.75, 22.25, 18, 20.25, 36.25]
     freight
+    return (freight,)
+
+
+@app.cell
+def _(freight):
+    print(f"Number of freight charges: {len(freight)}")
     return
 
 
@@ -82,6 +94,25 @@ def _(mo):
     return
 
 
+@app.cell
+def _(freight):
+    freight[0]
+    return
+
+
+@app.cell
+def _(freight):
+    len(freight)
+    return
+
+
+@app.cell
+def _(freight):
+    total = sum(freight)
+    total
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -98,6 +129,17 @@ def _(mo):
        **Does it run?**
 
     Four experiments follow. Do them in order, and undo each one before the next.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""
+    1. x will print 50
+    2. B will print 0 since there is no value associated with cell A
+    3. total is printed out twice
+    4. no, it doesn't run since total is not defined
     """)
     return
 

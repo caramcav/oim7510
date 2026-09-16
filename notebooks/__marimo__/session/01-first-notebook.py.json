@@ -8,12 +8,39 @@
     {
       "id": "Hbol",
       "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
+      "id": "RgkI",
+      "code_hash": "701bf4a4743e5e0361e26999881a5ce9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "hi\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
       "id": "MJUe",
-      "code_hash": "d30d0eae2d7aa0d38ac4a48c4f723e21",
+      "code_hash": "15c0a8a9c8af7c70b8fb474b6c437494",
       "outputs": [
         {
           "type": "data",
@@ -38,10 +65,37 @@
       "console": []
     },
     {
-      "id": "bkHC",
-      "code_hash": "11ecc6d21e30754ec9800c3c1029a280",
-      "outputs": [],
+      "id": "yaJj",
+      "code_hash": "5bc698c463e643f3d476748205e4b77a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", 18, \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
+          }
+        }
+      ],
       "console": []
+    },
+    {
+      "id": "TRKI",
+      "code_hash": "04734cdaa1c87230aeca9e21f580de0e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Number of freight charges: 5\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "lEQa",
@@ -57,6 +111,45 @@
       "console": []
     },
     {
+      "id": "ZCeA",
+      "code_hash": "bf64f13e25f74abe3f8d30053bca8479",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>16.75</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MwlA",
+      "code_hash": "f588828efbae79e3d292e56d1729fc62",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>5</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lsxl",
+      "code_hash": "6102414f6de17af77ee465a6ebcce07c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>113.5</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
       "id": "PKri",
       "code_hash": "eac25daeca442db175606c0562f487dc",
       "outputs": [
@@ -64,6 +157,19 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"guess-first-four-questions\">\ud83d\ude4b Guess First: Four Questions</h1>\n<span class=\"paragraph\">Write all four answers down before you run anything.</span>\n<ol>\n<li>Cell A says <code>x = 5</code>. Cell B says <code>print(x)</code>. You change A to <code>x = 50</code>.\n   <strong>What does B print?</strong></li>\n<li>Cell A says <code>orders = 3</code>. Cell B says <code>orders * 12</code>. You <strong>delete cell A</strong>.\n   <strong>What happens to B?</strong></li>\n<li>Two different cells both say <code>total = ...</code>. <strong>What happens?</strong></li>\n<li>You put <code>print(total)</code> <strong>above</strong> the cell that says <code>total = 5</code>.\n   <strong>Does it run?</strong></li>\n</ol>\n<span class=\"paragraph\">Four experiments follow. Do them in order, and undo each one before the next.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "djob",
+      "code_hash": "49a6689943ee4d4ef5f739bf5c34ff78",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ol>\n<li>x will print 50</li>\n<li>B will print 0 since there is no value associated with cell A</li>\n<li>total is printed out twice</li>\n<li>no, it doesn't run since total is not defined</li>\n</ol></span>"
           }
         }
       ],
