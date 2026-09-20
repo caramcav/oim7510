@@ -134,7 +134,7 @@ def _(freight_charges):
 def _(freight_charges):
     total = sum(freight_charges)
     total
-    return
+    return (total,)
 
 
 @app.cell(hide_code=True)
@@ -502,6 +502,12 @@ def _(mo):
     return
 
 
+@app.cell
+def _(freight_charges, total):
+    print(f"The total freight charge was ${total:.2f} and the average freight charge was ${total/len(freight_charges):.2f}.")
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -552,6 +558,22 @@ def _(mo):
     return
 
 
+@app.cell
+def _(freight_charges):
+    below_25 = []
+    for charge2 in freight_charges:
+        if charge2 < 25:
+                below_25.append(charge2)
+    below_25
+    return (below_25,)
+
+
+@app.cell
+def _(below_25):
+    print(f"There are {len(below_25)} charges below $25 and they add up to ${sum(below_25)}. Those charges are ${below_25[0]}, ${below_25[1]} and ${below_25[2]}.")
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -586,6 +608,30 @@ def _(mo):
     If marimo offers to install `pandsa`, do not. No package has that name, so the install fails.
 
     📖 Handbook: Python §9 Modules and `import`, §10 Reading a traceback
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    There is no module named "pandsa" within this notebook, therefore it is not able to import it. If there's any sort of typo, it will not recognize the module name.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    There is no file within the folder that is labeled sales.csv, therefore it can't open that file.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    The error I received was " '[' was never closed". If the code does not have the correct syntax, including closing brackets, it will not be able to run.
     """)
     return
 

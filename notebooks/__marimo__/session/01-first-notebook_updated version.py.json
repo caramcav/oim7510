@@ -610,6 +610,26 @@
       "console": []
     },
     {
+      "id": "ddWw",
+      "code_hash": "34e320c6551442e4381745d50d72922e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "The total freight charge was $120.50 and the average freight charge was $24.10.\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
       "id": "aLJB",
       "code_hash": "820c55de11633da2a9d03c20e93517b6",
       "outputs": [
@@ -625,7 +645,14 @@
     {
       "id": "nHfw",
       "code_hash": "99d2afc68739f124c36b434e4f86adcf",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:22.25\", \"text/plain+float:25.0\", \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -655,6 +682,39 @@
       "console": []
     },
     {
+      "id": "uJDp",
+      "code_hash": "914b6ea2cd1540b60dec5828562906ba",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:20.25\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "UUPm",
+      "code_hash": "ae60b424bbeaedbbb8e72a392769fe11",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "There are 3 charges below $25 and they add up to $59.25. Those charges are $16.75, $22.25 and $20.25.\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
       "id": "pHFh",
       "code_hash": "3c0f55b2f8582e207416da282626db3d",
       "outputs": [
@@ -675,6 +735,45 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"break-it-three-ways\">\u270f\ufe0f Break It Three Ways</h1>\n<span class=\"paragraph\">Each line below fails. Put each one in a cell of your own and run it. Under each, add a markdown cell that explains the last line of the error in your own words.</span>\n<ol>\n<li><code>import pandsa</code>, a package name with a typo</li>\n<li><code>open(\"sales.csv\")</code>, a file that is not in your project</li>\n<li><code>new_charges = [16.75, 22.25</code>, with the closing bracket missing</li>\n</ol>\n<span class=\"paragraph\">You should meet three different kinds of error. Keep your markdown cells, and delete the broken cells so the notebook runs clean.</span>\n<span class=\"paragraph\">If marimo offers to install <code>pandsa</code>, do not. No package has that name, so the install fails.</span>\n<span class=\"paragraph\">\ud83d\udcd6 Handbook: Python \u00a79 Modules and <code>import</code>, \u00a710 Reading a traceback</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "CsJt",
+      "code_hash": "4828eb623dfe736de9699112b51de780",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">There is no module named \"pandsa\" within this notebook, therefore it is not able to import it. If there's any sort of typo, it will not recognize the module name. </span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MnbB",
+      "code_hash": "dd272bcc2a01f4df6f75264768379250",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">There is no file within the folder that is labeled sales.csv, therefore it can't open that file. </span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "YXGT",
+      "code_hash": "8cd9e800e2e0e848d48d0758682dd20c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The error I received was \" '[' was never closed\". If the code does not have the correct syntax, including closing brackets, it will not be able to run. </span></span>"
           }
         }
       ],
