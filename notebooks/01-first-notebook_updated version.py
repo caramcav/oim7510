@@ -92,7 +92,7 @@ def _(mo):
 
 @app.cell
 def _():
-    freight_charges = [16.75, 22.25, 25.00, 20.25, 36.25]
+    freight_charges = [16.75, 22.25, 33.33, 20.25, 36.25]
     freight_charges
     return (freight_charges,)
 
@@ -400,12 +400,6 @@ def _():
     return
 
 
-@app.cell
-def _():
-    16.75 + "22.25"
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -651,6 +645,20 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    Since all of these values are strings, the code will compare the first digits. Since "9.50" has the highest first digit (9), it'll return the 9.50 even though it is not the largest number
+    """)
+    return
+
+
+@app.cell
+def _():
+    max(["9.50", "16.75", "22.25"])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # ▶️ Why the Smallest Price Came Out on Top
 
     It returns `'9.50'`, with no error.
@@ -697,6 +705,16 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    1. Python names line 3
+    2. I would change line 1. The array freight_charges itself isn't an issue until we issue a command that tries to add together values of different types- float and string.
+    3. I would change the value to 0 since we don't have the actual charge yet. Then, once we have the cost of the pending charge, I'd update it to that number.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # ▶️ The List as a Bar Chart
 
     > **Advanced.** Nothing later depends on this.
@@ -720,6 +738,17 @@ def _(mo):
 
     The square brackets inside `_ax.bar(...)` are a **list comprehension**, which **iterates** over `orders` and turns each number into text.
     """)
+    return
+
+
+@app.cell
+def _(freight_charges, orders):
+    import matplotlib.pyplot as plt
+
+    _fig, _ax = plt.subplots(figsize=(6, 2.6))
+    _ax.bar([str(_o) for _o in orders], freight_charges)
+    _ax.set_ylabel("freight")
+    _fig
     return
 
 
