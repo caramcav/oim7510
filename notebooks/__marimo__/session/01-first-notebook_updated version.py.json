@@ -8,12 +8,19 @@
     {
       "id": "Hbol",
       "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "MJUe",
-      "code_hash": "7831a116d931c68fee667380f10afe58",
+      "code_hash": "f140325dac078e0ce683a390f306fc98",
       "outputs": [
         {
           "type": "data",
@@ -53,7 +60,14 @@
     {
       "id": "lEQa",
       "code_hash": "bb74efdbc983ea90b6751814ad1974a4",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:25.0\", \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -70,6 +84,45 @@
       "console": []
     },
     {
+      "id": "Mbku",
+      "code_hash": "abd5a46c9b2d6515004aada631c3ff55",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>16.75</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ltHq",
+      "code_hash": "47c11c10e5fa42f4ae3d744af66eaac0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>5</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NOQf",
+      "code_hash": "e707e1d0713d0e505ef05956a4278cac",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>120.5</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
       "id": "Xref",
       "code_hash": "26b4c34487e23e3a6a8a25ca45d5c821",
       "outputs": [
@@ -77,6 +130,19 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"before-you-run-anything\">\ud83d\ude4b Before You Run Anything</h1>\n<span class=\"paragraph\">Write all four answers down before you run anything.</span>\n<ol>\n<li>Cell A says <code>x = 5</code>. Cell B says <code>print(x)</code>. You change A to <code>x = 50</code>.\n   <strong>What does B print?</strong></li>\n<li>Cell A says <code>orders = 3</code>. Cell B says <code>orders * 12</code>. You <strong>delete cell A</strong>.\n   <strong>What happens to B?</strong></li>\n<li>Two different cells both say <code>total = ...</code>. <strong>What happens?</strong></li>\n<li>You put <code>print(total)</code> <strong>above</strong> the cell that says <code>total = 5</code>.\n   <strong>Does it run?</strong></li>\n</ol>\n<span class=\"paragraph\">Four experiments follow. Do them in order, and undo each one before the next.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "raRo",
+      "code_hash": "463a51151ee96df8f10683f25687de0c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ol>\n<li>B will print 50</li>\n<li>there will be an error/value won't compute since order no longer has a value assigned</li>\n<li>there will be an error since you can't assign two values to the same variable</li>\n<li>Yes, it will still run because the order does not matter</li>\n</ol></span>"
           }
         }
       ],
@@ -163,7 +229,14 @@
     {
       "id": "nWHF",
       "code_hash": "fcd5fe5a90d3e8ec5b572d836365a5bf",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[10248, 10249, 10250, 10251, 10252]"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -174,6 +247,149 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"explore\">\ud83d\ude4b Explore</h1>\n<span class=\"paragraph\">One line per cell. Write down what you expect before you run it. Every one of these\ndepends on the <strong>type</strong> of the thing you hand it.</span>\n<ol>\n<li><code>freight_charges[-1]</code></li>\n<li><code>freight_charges[:3]</code>, which is a <strong>slice</strong></li>\n<li><code>orders[0]</code> and <code>freight_charges[0]</code>. What do those two have in common?</li>\n<li><code>category = \"Confections\"</code>, then <code>len(category)</code>. <code>len</code> counted five things a moment ago. What is it counting now?</li>\n<li><code>sum(orders)</code>. It runs. Should it?</li>\n<li><code>orders * 2</code>, then <code>orders + freight_charges</code>. Neither one is an error.</li>\n<li><code>sorted(freight_charges)</code>, then <code>sorted(freight_charges, reverse=True)</code>. What did <code>reverse=True</code> change, and did <code>freight_charges</code> itself change?</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nocT",
+      "code_hash": "685815889f987da6df68e8c64eb1042a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ol>\n<li>will not run since there is no -1 position</li>\n<li>It will return values in position 3 and earlier</li>\n<li>these are showing information from the same transaction</li>\n<li>It is counting the number of letters in Confections, which is 11</li>\n<li>It should run, but the value is meaningless- you're adding together the order numbers themselves, which are indexes and have no meaning as a combined value</li>\n<li>Different values are being computed and output. Because they aren't being assigned to the same variable, it does not produce an error.</li>\n<li>reverse=true will display the array sorted in reverse order. Freight charges itself did not change with each of the manipulations. </li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Abru",
+      "code_hash": "c0a7a809473e29effbb39c4685dd71f9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>36.25</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qmDc",
+      "code_hash": "20bab0561e08ed42ac58e6591d9ef83f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:25.0\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PQgU",
+      "code_hash": "05ebc636a6e146738183f16d21239d8c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>10248</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "zBRT",
+      "code_hash": "abd5a46c9b2d6515004aada631c3ff55",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>16.75</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "LgZm",
+      "code_hash": "e24228ac5e1948b5f74c584d04e36784",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>11</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYUf",
+      "code_hash": "3185adb3fd9ee53e74b5778d920b025e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>51250</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SWxy",
+      "code_hash": "6a0371b8b72d50a260e8cb64ebf461c3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[10248, 10249, 10250, 10251, 10252, 10248, 10249, 10250, 10251, 10252]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "VyTH",
+      "code_hash": "954c6a48329eec4c1e36f2a6e3b81139",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[10248, 10249, 10250, 10251, 10252, \"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:25.0\", \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "tCzz",
+      "code_hash": "c868ee09c8177da4fbaedcb30ed7efbe",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:20.25\", \"text/plain+float:22.25\", \"text/plain+float:25.0\", \"text/plain+float:36.25\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dnjV",
+      "code_hash": "973fd106ab257a38f3db52368cdb2abd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:36.25\", \"text/plain+float:25.0\", \"text/plain+float:22.25\", \"text/plain+float:20.25\", \"text/plain+float:16.75\"]"
           }
         }
       ],
@@ -225,6 +441,52 @@
       "console": []
     },
     {
+      "id": "yUgi",
+      "code_hash": "9a46ae43198deb22897fa29c3b1cb74f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ol>\n<li>Adds the two strings of text together</li>\n<li>Gives an error since the types of values are different</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "LCJN",
+      "code_hash": "b0edec4e15698beb44aca5790c83e9d8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&#x27;16.7522.25&#x27;</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TDkb",
+      "code_hash": "670df440749065272ea17293d93060d6",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "unsupported operand type(s) for +: 'float' and 'str'",
+          "traceback": null
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">\"/var/folders/hn/_nd4hv3x2056c2q3b5w3r6900000gn/T/marimo_58278/__marimo__cell_TDkb_.py\"</span>, line <span class=\"m\">1</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"mf\">16.75</span> <span class=\"o\">+</span> <span class=\"s2\">\"22.25\"</span>\n<span class=\"w\">    </span><span class=\"pm\">~~~~~~^~~~~~~~~</span>\n<span class=\"gr\">TypeError</span>: <span class=\"n\">unsupported operand type(s) for +: 'float' and 'str'</span>\n</pre></div>\n</span>",
+          "mimetype": "application/vnd.marimo+traceback"
+        }
+      ]
+    },
+    {
       "id": "Vxnm",
       "code_hash": "61c872df0f30ee9fc863188843e1827f",
       "outputs": [
@@ -245,6 +507,58 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"compare-two-charges\">\u270f\ufe0f Compare Two Charges</h1>\n<span class=\"paragraph\">In cells of your own:</span>\n<ol>\n<li>Is the first charge above 20? <code>freight_charges[0] &gt; 20</code></li>\n<li>Is the last charge the largest? <code>freight_charges[-1] == max(freight_charges)</code></li>\n<li>Check the type of either answer with <code>type()</code>.</li>\n</ol>\n<span class=\"paragraph\"><code>==</code> asks whether two values are equal. A single <code>=</code> stores a value.</span>\n<span class=\"paragraph\">\ud83d\udcd6 Handbook: Python \u00a73 Expressions and operators</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aOgb",
+      "code_hash": "4651bf9a69bb46c268a7af280fe5d14d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>False</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lDYo",
+      "code_hash": "f2f95268c49ef91f0cf38d932e321301",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>True</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "YLEZ",
+      "code_hash": "025f6b39bb54379193b86fd78208d7d2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&lt;class &#x27;bool&#x27;&gt;</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BBfU",
+      "code_hash": "fa2c8123173869076f2ef7b375f3bc5f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&lt;class &#x27;bool&#x27;&gt;</pre>"
           }
         }
       ],

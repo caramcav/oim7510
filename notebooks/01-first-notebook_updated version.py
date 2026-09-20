@@ -118,6 +118,25 @@ def _(mo):
     return
 
 
+@app.cell
+def _(freight_charges):
+    freight_charges[0]
+    return
+
+
+@app.cell
+def _(freight_charges):
+    len(freight_charges)
+    return
+
+
+@app.cell
+def _(freight_charges):
+    total = sum(freight_charges)
+    total
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -134,6 +153,17 @@ def _(mo):
        **Does it run?**
 
     Four experiments follow. Do them in order, and undo each one before the next.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    1. B will print 50
+    2. there will be an error/value won't compute since order no longer has a value assigned
+    3. there will be an error since you can't assign two values to the same variable
+    4. Yes, it will still run because the order does not matter
     """)
     return
 
@@ -244,6 +274,81 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    1. will not run since there is no -1 position
+    2. It will return values in position 3 and earlier
+    3. these are showing information from the same transaction
+    4. It is counting the number of letters in Confections, which is 11
+    5. It should run, but the value is meaningless- you're adding together the order numbers themselves, which are indexes and have no meaning as a combined value
+    6. Different values are being computed and output. Because they aren't being assigned to the same variable, it does not produce an error.
+    7. reverse=true will display the array sorted in reverse order. Freight charges itself did not change with each of the manipulations.
+    """)
+    return
+
+
+@app.cell
+def _(freight_charges):
+    freight_charges[-1]
+    return
+
+
+@app.cell
+def _(freight_charges):
+    freight_charges[:3]
+    return
+
+
+@app.cell
+def _(orders):
+    orders[0]
+    return
+
+
+@app.cell
+def _(freight_charges):
+    freight_charges[0]
+    return
+
+
+@app.cell
+def _():
+    category= "Confections"
+    len(category)
+    return
+
+
+@app.cell
+def _(orders):
+    sum(orders)
+    return
+
+
+@app.cell
+def _(orders):
+    orders*2
+    return
+
+
+@app.cell
+def _(freight_charges, orders):
+    orders + freight_charges
+    return
+
+
+@app.cell
+def _(freight_charges):
+    sorted(freight_charges)
+    return
+
+
+@app.cell
+def _(freight_charges):
+    sorted(freight_charges,reverse='True')
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # ▶️ What Type Is It
 
     What kind of value is each thing in these two lists?
@@ -283,6 +388,27 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    1. Adds the two strings of text together
+    2. Gives an error since the types of values are different
+    """)
+    return
+
+
+@app.cell
+def _():
+    "16.75" + "22.25"
+    return
+
+
+@app.cell
+def _():
+    16.75 + "22.25"
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # ▶️ What Came Back
 
     The first line gives `'16.7522.25'`. Both values are text, so `+` joins them end to end.
@@ -311,6 +437,30 @@ def _(mo):
 
     📖 Handbook: Python §3 Expressions and operators
     """)
+    return
+
+
+@app.cell
+def _(freight_charges):
+    freight_charges[0]>20
+    return
+
+
+@app.cell
+def _(freight_charges):
+    freight_charges[-1]==max(freight_charges)
+    return
+
+
+@app.cell
+def _(freight_charges):
+    type(freight_charges[0]>20)
+    return
+
+
+@app.cell
+def _(freight_charges):
+    type(freight_charges[-1]==max(freight_charges))
     return
 
 
