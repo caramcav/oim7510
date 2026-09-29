@@ -301,7 +301,7 @@
     },
     {
       "id": "GWzM",
-      "code_hash": "a739462aea4cd1c6c1b601808d07bbf6",
+      "code_hash": "e950c9ece2597e2e01816c5f5129ba3e",
       "outputs": [
         {
           "type": "data",
@@ -366,7 +366,7 @@
     },
     {
       "id": "Kclp",
-      "code_hash": "8117a3f423f5917002abbf74acf38166",
+      "code_hash": "b9d099ceb13d7b78ff01c5718d5d6932",
       "outputs": [
         {
           "type": "data",
@@ -386,12 +386,12 @@
     },
     {
       "id": "ddax",
-      "code_hash": "0fc4a2a9083758f2007429e7f7c144b0",
+      "code_hash": "23397cfa9e4f7455028403c833580620",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">If a score satisfies two tests at once within \"if\" statements, it'll follow whichever condition is written first. </span></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">If a score satisfies two tests at once within \"if\" statements, it'll follow whichever condition is written first.  </span></span>"
           }
         }
       ],
@@ -424,6 +424,66 @@
       "console": []
     },
     {
+      "id": "OaSd",
+      "code_hash": "8aad35d1a1a8d6e5cc0b4629b014c2b6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "3\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "aXdm",
+      "code_hash": "bc29f5973e3b8fe91f05e61749e7797c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "2\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "cfQv",
+      "code_hash": "e30268198b7be22d9af45f21d3149202",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "60.0% of orders have been shipped.\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
       "id": "nWHF",
       "code_hash": "53b3a52a2d49ccac692ab047603ba4c1",
       "outputs": [
@@ -437,13 +497,46 @@
       "console": []
     },
     {
-      "id": "iLit",
-      "code_hash": "d7f1e30a273b00c372f58d2c77801a99",
+      "id": "SiIO",
+      "code_hash": "df5105d40840dd62c65e0c02d1e9abd9",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/html": "<pre class='text-xs'>3</pre>"
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "stapler\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "iLit",
+      "code_hash": "c85449df5aaeecfdcb957912380535a2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>4</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "LvzV",
+      "code_hash": "d273eb5385697035831572a3fd431fc5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Append always adds 1 item, no matter how many separate items you hand it.</span></span>"
           }
         }
       ],
@@ -464,12 +557,12 @@
     },
     {
       "id": "ROlb",
-      "code_hash": "01a8d5269858a498482cb962fade9d87",
+      "code_hash": "b1a867a6ac200523ce19b9f36fd54f6d",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "application/json": "[\"AAPL\", \"MSFT\", \"NVDA\"]"
+            "text/plain": ""
           }
         }
       ],
@@ -477,10 +570,43 @@
         {
           "type": "stream",
           "name": "stdout",
-          "text": "['AAPL', 'MSFT', 'NVDA']\nNone\n",
+          "text": "['AAPL', 'MSFT', 'NVDA']\nNone\n['AAPL', 'MSFT', 'NVDA']\n",
           "mimetype": "text/plain"
         }
       ]
+    },
+    {
+      "id": "oVOT",
+      "code_hash": "a24cd81dec103216b544347b72a727b8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "['NVDA', 'MSFT', 'AAPL']\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "WlMs",
+      "code_hash": "67d11d8f92734de580c33c2480d9ee99",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The first print statement prints a sorted list, whereas the second print statement outputs the result of sort- which is \"none\" since it rearranges the existing list. </span></span>"
+          }
+        }
+      ],
+      "console": []
     },
     {
       "id": "qnkX",
@@ -497,12 +623,51 @@
     },
     {
       "id": "TqIu",
-      "code_hash": "8d95c8f244caaf7e1606caf938476e98",
+      "code_hash": "fef8050147ab6b97e03e371500ce2207",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "application/json": "[\"text/plain+float:12.5\", \"text/plain+float:8.0\", \"text/plain+float:19.99\", \"text/plain+float:4.99\"]"
+            "application/json": "[\"text/plain+float:12.5\", \"text/plain+float:8.0\", \"text/plain+float:19.99\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "kBXP",
+      "code_hash": "17747770c03309cbfa72d1a2a191622b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:11.25\", \"text/plain+float:7.2\", \"text/plain+float:17.991\", \"text/plain+float:4.4910000000000005\"]"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "zlZU",
+      "code_hash": "da56d086dd6116a545e315bc3806642d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>False</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "sqDD",
+      "code_hash": "fa4fa5eb3bafa18a1433703c061dbd59",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">You'd want two names to refer to the same list on purpose when that information will be referenced in multiple places, such as for a class roster or when showing prices in the cart vs. product pages on a shopping website. </span></span>"
           }
         }
       ],

@@ -356,7 +356,7 @@ def _():
         print("A")
     elif score >= 60:
         print("Pass")
-    elif score < 60:
+    else:
         print("Fail")
 
     #I switched order of if statements so that it seperates out "A"s before "Pass"
@@ -395,6 +395,36 @@ def _(mo):
 def _():
     statuses = ["shipped", "pending", "shipped", "cancelled", "shipped"]
     statuses
+    return (statuses,)
+
+
+@app.cell
+def _(statuses):
+    shipped_counter = 0
+    for status in statuses: 
+        if status == "shipped":
+            shipped_counter = shipped_counter + 1
+
+    print(shipped_counter)
+    return (shipped_counter,)
+
+
+@app.cell
+def _(statuses):
+    not_shipped_counter = 0
+    for status_ in statuses:
+        if status_ != "shipped":
+            not_shipped_counter = not_shipped_counter + 1
+
+    print(not_shipped_counter)
+    return
+
+
+@app.cell
+def _(shipped_counter, statuses):
+    percent_shipped = shipped_counter/len(statuses)*100
+
+    print(f'{percent_shipped}% of orders have been shipped.')
     return
 
 
@@ -420,10 +450,24 @@ def _(mo):
 
 
 @app.cell
+def _(order_lines):
+    print(order_lines[2])
+    return
+
+
+@app.cell
 def _():
     order_lines = ["notebook", "pen"]
-    order_lines.append(["stapler", "tape"])
+    order_lines.extend(["stapler", "tape"])
     len(order_lines)
+    return (order_lines,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Append always adds 1 item, no matter how many separate items you hand it.
+    """)
     return
 
 
@@ -453,7 +497,22 @@ def _():
     tickers = ["NVDA", "AAPL", "MSFT"]
     print(sorted(tickers))
     print(tickers.sort())
-    tickers
+
+    print(tickers)
+    return (tickers,)
+
+
+@app.cell
+def _(tickers):
+    print(sorted(tickers, reverse=True))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    The first print statement prints a sorted list, whereas the second print statement outputs the result of sort- which is "none" since it rearranges the existing list.
+    """)
     return
 
 
@@ -487,9 +546,34 @@ def _(mo):
 @app.cell
 def _():
     prices = [12.50, 8.00, 19.99]
-    sale_prices = prices
+    sale_prices = prices[:]
     sale_prices.append(4.99)
     prices
+    return prices, sale_prices
+
+
+@app.cell
+def _(sale_prices):
+    # Build a new list of discounted prices, without changing sale_prices or prices.
+    discounted_prices = []
+    for price in sale_prices:
+        discounted_prices.append(price * 0.9)
+
+    discounted_prices
+    return
+
+
+@app.cell
+def _(prices, sale_prices):
+    prices is sale_prices
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    You'd want two names to refer to the same list on purpose when that information will be referenced in multiple places, such as for a class roster or when showing prices in the cart vs. product pages on a shopping website.
+    """)
     return
 
 
