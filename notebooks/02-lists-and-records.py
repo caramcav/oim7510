@@ -775,6 +775,17 @@ def _(mo):
     return
 
 
+@app.cell
+def _(orders):
+    total_freight=0
+
+    for order in orders: 
+        total_freight += order["Freight"]
+
+    print(total_freight)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
