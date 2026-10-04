@@ -342,7 +342,7 @@ def _(freight_charges):
 
 @app.cell
 def _(freight_charges):
-    sorted(freight_charges,reverse='True')
+    sorted(freight_charges,reverse=True)
     return
 
 
