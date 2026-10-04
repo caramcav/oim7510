@@ -124,17 +124,17 @@ def _(Charges):
 def _():
     # Your own example of each name.
 
-    # 1. value:
-    # 2. name and assignment:
-    # 3. type:
-    # 4. list:
-    # 5. index:
-    # 6. loop:
-    # 7. condition:
-    # 8. f-string:
-    # 9. many into one number:
-    # 10. function and argument:
-    # 11. error:
+    # 1. value: 17.5
+    # 2. name and assignment: total_transactions = len(charges)
+    # 3. type: "44.3" has a type of text
+    # 4. list: [2.3, 4.5, 7.8]
+    # 5. index: list[1]
+    # 6. loop: for items in list:
+    # 7. condition: if list > 23
+    # 8. f-string: f"${sumprices:.2f}"
+    # 9. many into one number: sumprices = sum(list)
+    # 10. function and argument: sorted(list, reverse = True)
+    # 11. error: ValueError
     return
 
 
@@ -316,13 +316,13 @@ def _(mo):
     it, write under the letter, and press `Ctrl+Enter`. Code still goes in cells of your
     own, added with the **+** button.
 
-    **A ·**
+    **A ·If a score satisfies two tests at once within "if" statements, it'll follow whichever condition is written first.
 
-    **C ·**
+    **C ·Append always adds 1 item, no matter how many separate items you hand it.
 
-    **D ·**
+    **D ·The first print statement prints a sorted list, whereas the second print statement outputs the result of sort- which is "none" since it rearranges the existing list instead of outputting the sorted list.
 
-    **E ·**
+    **E ·You'd want two names to refer to the same list on purpose when that information will be referenced in multiple places, such as for a class roster or when showing prices in the cart vs. product pages on a shopping website.
     """)
     return
 
@@ -360,14 +360,6 @@ def _():
         print("Fail")
 
     #I switched order of if statements so that it seperates out "A"s before "Pass"
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    If a score satisfies two tests at once within "if" statements, it'll follow whichever condition is written first.
-    """)
     return
 
 
@@ -466,14 +458,6 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Append always adds 1 item, no matter how many separate items you hand it.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
     ## D · Sorting the tickers
 
     Two ways to put a list in order. They look alike and they do different things, and
@@ -505,14 +489,6 @@ def _():
 @app.cell
 def _(tickers):
     print(sorted(tickers, reverse=True))
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    The first print statement prints a sorted list, whereas the second print statement outputs the result of sort- which is "none" since it rearranges the existing list.
-    """)
     return
 
 
@@ -572,14 +548,6 @@ def _(prices, sale_prices):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    You'd want two names to refer to the same list on purpose when that information will be referenced in multiple places, such as for a class roster or when showing prices in the cart vs. product pages on a shopping website.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
     ## If You Finish
 
     Required of nobody. Take them in any order.
@@ -601,7 +569,34 @@ def _(mo):
 @app.cell
 def _():
     print("100" + "50")
-    print(100 + 50)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    "100" + "50" combined the values as strings instead of arithmetically. That's reasonable because there is no way to "add" letters in a mathematical sense, thus it makes sense for strings to be added together.
+    """)
+    return
+
+
+@app.cell
+def _():
+    print(int("100")+int("50"))
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    The error that came up when I tried to change "100.5" to a number was "invalid literal for int() with base 10: '100.5.'"\" This error occurred because integers need to be whole numbers. By changing function to "float", the text was converted to a number correctly.
+    """)
+    return
+
+
+@app.cell
+def _():
+    print(float("100.5"))
     return
 
 
@@ -682,6 +677,22 @@ def _(mo):
 
     Two of them fail, and both give the same kind of error. Add a cell and find out
     which, and what the message says. A `KeyError` names the key it could not find.
+    """)
+    return
+
+
+@app.cell
+def _(first_order):
+    first_order["Freight"]
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    first_order["freight"] failed because the cases of the letters in "freight" did not match those listed in the first_ order description.
+
+    first_order[0] failed because first_order is a record and not a list of numbers, therefore the index does not have a meaning without also specifying which field's value is being indexed.
     """)
     return
 
@@ -782,7 +793,41 @@ def _(orders):
     for order in orders: 
         total_freight += order["Freight"]
 
-    print(total_freight)
+    print(f"The total freight across all 30 orders is ${total_freight:.2f}")
+    return
+
+
+@app.cell
+def _(orders):
+    no_ship_date_counter = 0
+
+    for order_1 in orders:
+        if order_1["ShippedDate"] is None:
+            no_ship_date_counter += 1
+
+    print(f"Total orders with no ship date: {no_ship_date_counter}")
+    return
+
+
+@app.cell
+def _(orders):
+    largest_order = None
+    largest_freight = 0
+
+    for order_2 in orders:
+        if order_2["Freight"] > largest_freight:
+            largest_freight = order_2["Freight"]
+            largest_order = order_2
+
+    print(f"Order {largest_order['OrderID']} has the largest freight: ${largest_freight:.2f}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    The three orders with no ship date were placed in 2018, whereas the other orders were all placed in 2016.
+    """)
     return
 
 
@@ -806,11 +851,15 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    *One row is ...*
+    *One row is ... a complete set of data for one order, item, etc. within a table.
 
-    *(Replace this line with your own sentence. If this cell shows you code instead of
-    text, use the cell menu to turn it into a markdown cell.)*
+    This table does have 30 rows since it represents 30 individual orders.
     """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
@@ -836,6 +885,14 @@ def _(mo):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    1. How would I do this? First I'd need to multiply shares by price for each symbol to calculate the full cost for each stock, then I would add all of those together. I'd use a for loop to accomplish this by performing the multiplication for each stock as I went through the indexes of the list and add that to a total sum using a counter.
+    """)
+    return
+
+
 @app.cell
 def _():
     portfolio = [
@@ -847,6 +904,17 @@ def _():
         {"Symbol": "TSLA", "Shares": 150, "Price": 255.70},
     ]
     portfolio
+    return (portfolio,)
+
+
+@app.cell
+def _(portfolio):
+    portfolio_total = 0
+
+    for holding in portfolio:
+        portfolio_total = portfolio_total + holding["Shares"] * holding["Price"]
+
+    print(f"Total cost to buy the whole portfolio: ${portfolio_total:.2f}")
     return
 
 
@@ -898,6 +966,35 @@ def _(mo):
         _where = f"could not write into {_data_dir.name}/: {_error}"
 
     _where
+    return (portfolio_csv,)
+
+
+@app.cell
+def _(portfolio_csv):
+    with open(portfolio_csv) as _file:
+        _file_lines = _file.readlines()
+
+    print(f"{'name':<8}{'shares':>8}{'price':>10}")
+
+    file_total = 0
+    for _row in _file_lines[1:]:
+        _ticker, _shares, _price = _row.strip().split(",")
+        _shares = int(_shares)
+        _price = float(_price)
+        print(f"{_ticker:<8}{_shares:>8}{_price:>10.2f}")
+        file_total = file_total + _shares * _price
+
+    print(f"Total cost: ${file_total:.2f}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    1. Tell the code where the file is to pull the data from, then print the data in table format. Use a for loop to calculate share times price for each of the stocks then add those together in a running total.
+
+    The "split" function divides the row where it sees a comma to separate the different values. Strip() removes the invisible newline character, /n, from the end of the row.
+    """)
     return
 
 

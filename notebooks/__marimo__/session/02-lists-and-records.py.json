@@ -8,7 +8,14 @@
     {
       "id": "Hbol",
       "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -40,49 +47,119 @@
     {
       "id": "bkHC",
       "code_hash": "98a69a1caefa8d04f65b4b340d6e8797",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Enter the cost 135\nEnter tax:  4.56\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "lEQa",
       "code_hash": "59670da308d09b9f962905d42f5eea85",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>1350.0</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "PKri",
       "code_hash": "9bc20ec431429cc424aa1c2fdfac1894",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&lt;class &#x27;float&#x27;&gt;</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "Xref",
       "code_hash": "ec5527a6c62e392eae5528bf8a812dd2",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "The total cost is $1350.00.\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "SFPL",
       "code_hash": "ddee1b77ba62171f01b56d895a259d6c",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "BYtC",
       "code_hash": "abdb029404654de3343b9a93aa462711",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>25.0</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "RGSE",
       "code_hash": "dd570e0572125fbd7471c3e337177713",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "Kclp",
-      "code_hash": "115cdc766461e63d887742e99ed47a5d",
-      "outputs": [],
+      "code_hash": "766b7a03a5d5682c15c421d80295d15e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -127,19 +204,40 @@
     {
       "id": "iLit",
       "code_hash": "3162e71c11ea9d96662b50a13fe21705",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:16.75\", \"text/plain+float:22.25\", \"text/plain+float:25.0\", \"text/plain+float:20.25\", \"text/plain+float:36.25\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "ZHCJ",
       "code_hash": "41b677e5a767bdc6d8289670f64a4304",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>16.75</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "ROlb",
       "code_hash": "efc656077a3e2ebeaa7723ca4ff21678",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>36.25</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -158,25 +256,60 @@
     {
       "id": "TqIu",
       "code_hash": "b742bce04216248e6d7596970cf9704d",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "Vxnm",
       "code_hash": "3c276237c975d15df51e2360e61feebd",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[0, 1, 2, 3]"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "DnEU",
       "code_hash": "c05276a88b341d8815a411e5e5521e23",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Total charges below $25 is 59.25\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "ulZA",
       "code_hash": "e950c9ece2597e2e01816c5f5129ba3e",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[{\"charge\": \"text/plain+float:16.75\", \"kept (< 25)?\": true, \"running total\": \"text/plain+float:16.75\"}, {\"charge\": \"text/plain+float:22.25\", \"kept (< 25)?\": true, \"running total\": \"text/plain+float:39.0\"}, {\"charge\": \"text/plain+float:25.0\", \"kept (< 25)?\": false, \"running total\": \"text/plain+float:39.0\"}, {\"charge\": \"text/plain+float:20.25\", \"kept (< 25)?\": true, \"running total\": \"text/plain+float:59.25\"}, {\"charge\": \"text/plain+float:36.25\", \"kept (< 25)?\": false, \"running total\": \"text/plain+float:59.25\"}]"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -207,12 +340,12 @@
     },
     {
       "id": "ZBYS",
-      "code_hash": "19fcbdf4ffd48826b1d19dcc06b0483d",
+      "code_hash": "c56772d484fdd5df0a6f0aa1a2ad75d3",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"your-written-answers\">Your written answers</h3>\n<span class=\"paragraph\">Four of the drills below ask for a sentence. This cell is where they go. Click into\nit, write under the letter, and press <code>Ctrl+Enter</code>. Code still goes in cells of your\nown, added with the <strong>+</strong> button.</span>\n<span class=\"paragraph\"><strong>A \u00b7</strong></span>\n<span class=\"paragraph\"><strong>C \u00b7</strong></span>\n<span class=\"paragraph\"><strong>D \u00b7</strong></span>\n<span class=\"paragraph\"><strong>E \u00b7</strong></span></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h3 id=\"your-written-answers\">Your written answers</h3>\n<span class=\"paragraph\">Four of the drills below ask for a sentence. This cell is where they go. Click into\nit, write under the letter, and press <code>Ctrl+Enter</code>. Code still goes in cells of your\nown, added with the <strong>+</strong> button.</span>\n<span class=\"paragraph\">**A \u00b7If a score satisfies two tests at once within \"if\" statements, it'll follow whichever condition is written first.</span>\n<span class=\"paragraph\">**C \u00b7Append always adds 1 item, no matter how many separate items you hand it.</span>\n<span class=\"paragraph\">**D \u00b7The first print statement prints a sorted list, whereas the second print statement outputs the result of sort- which is \"none\" since it rearranges the existing list instead of outputting the sorted list.</span>\n<span class=\"paragraph\">**E \u00b7You'd want two names to refer to the same list on purpose when that information will be referenced in multiple places, such as for a class roster or when showing prices in the cart vs. product pages on a shopping website.</span></span>"
           }
         }
       ],
@@ -234,21 +367,22 @@
     {
       "id": "nHfw",
       "code_hash": "b9d099ceb13d7b78ff01c5718d5d6932",
-      "outputs": [],
-      "console": []
-    },
-    {
-      "id": "xXTn",
-      "code_hash": "1297ca85665de00a0bccdd1a08aa2733",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">If a score satisfies two tests at once within \"if\" statements, it'll follow whichever condition is written first.</span></span>"
+            "text/plain": ""
           }
         }
       ],
-      "console": []
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Fail\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "AjVT",
@@ -266,26 +400,75 @@
     {
       "id": "pHFh",
       "code_hash": "413f573172b95d2cba69850b5e98a1e1",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"shipped\", \"pending\", \"shipped\", \"cancelled\", \"shipped\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "NCOB",
       "code_hash": "8aad35d1a1a8d6e5cc0b4629b014c2b6",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "3\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "aqbW",
       "code_hash": "bc29f5973e3b8fe91f05e61749e7797c",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "2\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "TRpd",
       "code_hash": "e30268198b7be22d9af45f21d3149202",
-      "outputs": [],
-      "console": []
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "60.0% of orders have been shipped.\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "TXez",
@@ -303,23 +486,31 @@
     {
       "id": "dNNg",
       "code_hash": "df5105d40840dd62c65e0c02d1e9abd9",
-      "outputs": [],
-      "console": []
-    },
-    {
-      "id": "yCnT",
-      "code_hash": "c85449df5aaeecfdcb957912380535a2",
-      "outputs": [],
-      "console": []
-    },
-    {
-      "id": "wlCL",
-      "code_hash": "d273eb5385697035831572a3fd431fc5",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">Append always adds 1 item, no matter how many separate items you hand it.</span></span>"
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "stapler\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "yCnT",
+      "code_hash": "c85449df5aaeecfdcb957912380535a2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>4</pre>"
           }
         }
       ],
@@ -341,27 +532,42 @@
     {
       "id": "wAgl",
       "code_hash": "b1a867a6ac200523ce19b9f36fd54f6d",
-      "outputs": [],
-      "console": []
-    },
-    {
-      "id": "rEll",
-      "code_hash": "a24cd81dec103216b544347b72a727b8",
-      "outputs": [],
-      "console": []
-    },
-    {
-      "id": "dGlV",
-      "code_hash": "0ebfa77f0b1179068213925053cb1c80",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The first print statement prints a sorted list, whereas the second print statement outputs the result of sort- which is \"none\" since it rearranges the existing list.</span></span>"
+            "text/plain": ""
           }
         }
       ],
-      "console": []
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "['AAPL', 'MSFT', 'NVDA']\nNone\n['AAPL', 'MSFT', 'NVDA']\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "rEll",
+      "code_hash": "a24cd81dec103216b544347b72a727b8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "['NVDA', 'MSFT', 'AAPL']\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "SdmI",
@@ -379,29 +585,37 @@
     {
       "id": "lgWD",
       "code_hash": "fef8050147ab6b97e03e371500ce2207",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:12.5\", \"text/plain+float:8.0\", \"text/plain+float:19.99\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "yOPj",
       "code_hash": "17747770c03309cbfa72d1a2a191622b",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[\"text/plain+float:11.25\", \"text/plain+float:7.2\", \"text/plain+float:17.991\", \"text/plain+float:4.4910000000000005\"]"
+          }
+        }
+      ],
       "console": []
     },
     {
       "id": "fwwy",
       "code_hash": "da56d086dd6116a545e315bc3806642d",
-      "outputs": [],
-      "console": []
-    },
-    {
-      "id": "LJZf",
-      "code_hash": "4ab4627af74168fc95067599453e4825",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">You'd want two names to refer to the same list on purpose when that information will be referenced in multiple places, such as for a class roster or when showing prices in the cart vs. product pages on a shopping website.</span></span>"
+            "text/html": "<pre class='text-xs'>False</pre>"
           }
         }
       ],
@@ -422,9 +636,89 @@
     },
     {
       "id": "jxvo",
-      "code_hash": "e22c9fe5df8633ecd9c695b5510cb87f",
-      "outputs": [],
+      "code_hash": "fa69f0e6af7ddd6c5b89940ae327050d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "10050\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "hveZ",
+      "code_hash": "4ecbdbc6e0d41bfc574860ad66d520cd",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">\"100\" + \"50\" combined the values as strings instead of arithmetically. That's reasonable because there is no way to \"add\" letters in a mathematical sense, thus it makes sense for strings to be added together.</span></span>"
+          }
+        }
+      ],
       "console": []
+    },
+    {
+      "id": "QJMs",
+      "code_hash": "8cab35675b827dd0d105b6d3fc787e87",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "150\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "KcyC",
+      "code_hash": "54c550bf2d71d21171d1164eeadfaf0b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The error that came up when I tried to change \"100.5\" to a number was \"invalid literal for int() with base 10: '100.5.'\"\\\" This error occurred because integers need to be whole numbers. By changing function to \"float\", the text was converted to a number correctly.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PgFL",
+      "code_hash": "a1a14e4062e22b111c048cfce8a3900d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "100.5\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "mWxS",
@@ -455,7 +749,14 @@
     {
       "id": "YWSi",
       "code_hash": "53f7fdf6f5abd48e8964538bd017999e",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "{\"OrderID\": 10248, \"CustomerID\": \"VINET\", \"ShipCountry\": \"France\", \"ShipCity\": \"Reims\", \"OrderDate\": \"2016-07-04\", \"ShippedDate\": \"2016-07-16\", \"Freight\": \"text/plain+float:16.75\"}"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -474,7 +775,14 @@
     {
       "id": "tZnO",
       "code_hash": "332446c7b3958fd46ca5386ebac32217",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&#x27;France&#x27;</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -485,6 +793,32 @@
           "type": "data",
           "data": {
             "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"one-of-these-fails\">\u270f\ufe0f One of these fails</h2>\n<div class=\"language-python codehilite\"><pre><span></span><code><span class=\"n\">first_order</span><span class=\"p\">[</span><span class=\"s2\">\"Freight\"</span><span class=\"p\">]</span>\n<span class=\"n\">first_order</span><span class=\"p\">[</span><span class=\"s2\">\"freight\"</span><span class=\"p\">]</span>\n<span class=\"n\">first_order</span><span class=\"p\">[</span><span class=\"mi\">0</span><span class=\"p\">]</span>\n</code></pre></div>\n<span class=\"paragraph\">Two of them fail, and both give the same kind of error. Add a cell and find out\nwhich, and what the message says. A <code>KeyError</code> names the key it could not find.</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BNGH",
+      "code_hash": "2bfc2c56d92d1252dcea892b8285d87a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>16.75</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SgCI",
+      "code_hash": "b5c0ce48f5f7b14f47250a00cb353b9a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">first_order[\"freight\"] failed because the cases of the letters in \"freight\" did not match those listed in the first_ order description. </span>\n<span class=\"paragraph\">first_order[0] failed because first_order is a record and not a list of numbers, therefore the index does not have a meaning without also specifying which field's value is being indexed.</span></span>"
           }
         }
       ],
@@ -532,7 +866,14 @@
     {
       "id": "iXej",
       "code_hash": "56ae7cf264083e0936598623c21b783a",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&#x27;France&#x27;</pre>"
+          }
+        }
+      ],
       "console": []
     },
     {
@@ -550,7 +891,7 @@
     },
     {
       "id": "UmEG",
-      "code_hash": "13b3858497063caa532e4e388f9dfb0f",
+      "code_hash": "289a6b07d7c154ecf3723c11a7c84c26",
       "outputs": [
         {
           "type": "data",
@@ -563,10 +904,63 @@
         {
           "type": "stream",
           "name": "stdout",
-          "text": "827.0\n",
+          "text": "The total freight across all 30 orders is $827.00\n",
           "mimetype": "text/plain"
         }
       ]
+    },
+    {
+      "id": "xCjS",
+      "code_hash": "b464df299bdfd14c79dd23893d9c13c9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Total orders with no ship date: 3\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "lAYd",
+      "code_hash": "7987f54167e9f8ef9bf4818937f4bf48",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Order 10263 has the largest freight: $56.00\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "UhOL",
+      "code_hash": "6d53966f52eb3d8cdd6a895c8527f289",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">The three orders with no ship date were placed in 2018, whereas the other orders were all placed in 2016.</span></span>"
+          }
+        }
+      ],
+      "console": []
     },
     {
       "id": "vEBW",
@@ -583,12 +977,25 @@
     },
     {
       "id": "kLmu",
-      "code_hash": "1a951e63750454427afca99d94d5c044",
+      "code_hash": "08d1a68e88964f965cfe23a6ac200d88",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\"><em>One row is ...</em></span>\n<span class=\"paragraph\"><em>(Replace this line with your own sentence. If this cell shows you code instead of\ntext, use the cell menu to turn it into a markdown cell.)</em></span></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">*One row is ... a complete set of data for one order, item, etc. within a table. </span>\n<span class=\"paragraph\">This table does have 30 rows since it represents 30 individual orders. </span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "HKRi",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
           }
         }
       ],
@@ -608,10 +1015,50 @@
       "console": []
     },
     {
+      "id": "eZqL",
+      "code_hash": "554ddebeeaffc2244eea7fb62243ccef",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ol>\n<li>How would I do this? First I'd need to multiply shares by price for each symbol to calculate the full cost for each stock, then I would add all of those together. I'd use a for loop to accomplish this by performing the multiplication for each stock as I went through the indexes of the list and add that to a total sum using a counter.</li>\n</ol></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
       "id": "dxZZ",
       "code_hash": "ee04f5dc9b3e474ede5f3f883c3aa33e",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "application/json": "[{\"Symbol\": \"AAPL\", \"Shares\": 100, \"Price\": \"text/plain+float:173.93\"}, {\"Symbol\": \"MSFT\", \"Shares\": 50, \"Price\": \"text/plain+float:319.53\"}, {\"Symbol\": \"GOOG\", \"Shares\": 80, \"Price\": \"text/plain+float:131.36\"}, {\"Symbol\": \"AMZN\", \"Shares\": 200, \"Price\": \"text/plain+float:129.33\"}, {\"Symbol\": \"NVDA\", \"Shares\": 20, \"Price\": \"text/plain+float:410.17\"}, {\"Symbol\": \"TSLA\", \"Shares\": 150, \"Price\": \"text/plain+float:255.7\"}]"
+          }
+        }
+      ],
       "console": []
+    },
+    {
+      "id": "PjzU",
+      "code_hash": "d5d50cbf41658873b8d7bfea69c3a394",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Total cost to buy the whole portfolio: $116302.70\n",
+          "mimetype": "text/plain"
+        }
+      ]
     },
     {
       "id": "dlnW",
@@ -629,7 +1076,47 @@
     {
       "id": "TTti",
       "code_hash": "75416f5df6cb12c24498123c5e0d1d9a",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<pre class='text-xs'>&#x27;wrote data/portfolio.csv&#x27;</pre>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bFvY",
+      "code_hash": "0811173097ee9eee31df3f29f7cbe4e2",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "name      shares     price\nAAPL         100    173.93\nMSFT          50    319.53\nGOOG          80    131.36\nAMZN         200    129.33\nNVDA          20    410.17\nTSLA         150    255.70\nTotal cost: $116302.70\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "mdgO",
+      "code_hash": "0ab064c5e7613ca3a5d1c565c59907c6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><ol>\n<li>Tell the code where the file is to pull the data from, then print the data in table format. Use a for loop to calculate share times price for each of the stocks then add those together in a running total.</li>\n</ol>\n<span class=\"paragraph\">The \"split\" function divides the row where it sees a comma to separate the different values. Strip() removes the invisible newline character, /n, from the end of the row. </span></span>"
+          }
+        }
+      ],
       "console": []
     },
     {
