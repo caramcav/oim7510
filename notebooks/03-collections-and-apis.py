@@ -150,6 +150,26 @@ def _():
     return
 
 
+@app.cell
+def _(mo):
+    mo.md(r"""
+    **Tracing through `week_statuses`:**
+
+    | Step | `_status` | `.get(_status, 0)` returns | `+ 1` | New `status_counts` |
+    |---|---|---|---|---|
+    | 1 | `"shipped"` | `0` (not there yet) | `1` | `{"shipped": 1}` |
+    | 2 | `"pending"` | `0` (not there yet) | `1` | `{"shipped": 1, "pending": 1}` |
+    | 3 | `"shipped"` | `1` (already there) | `2` | `{"shipped": 2, "pending": 1}` |
+    | 4 | `"cancelled"` | `0` (not there yet) | `1` | `{"shipped": 2, "pending": 1, "cancelled": 1}` |
+    | 5 | `"shipped"` | `2` | `3` | `{"shipped": 3, "pending": 1, "cancelled": 1}` |
+    | 6 | `"shipped"` | `3` | `4` | `{"shipped": 4, "pending": 1, "cancelled": 1}` |
+    | 7 | `"pending"` | `1` | `2` | `{"shipped": 4, "pending": 2, "cancelled": 1}` |
+
+    Each line does two things at once: it **reads** the current count (or `0` if it's new) with `.get()`, then **writes** the updated count back with `status_counts[_status] = ...`.
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -157,7 +177,7 @@ def _(mo):
 
     Several questions below ask for a sentence. This cell is where they go. Click into it, write under the letter, and press `Ctrl+Enter` (Windows) or `Cmd+Enter` (macOS).
 
-    **B ·**
+    **B ·France, Germany, Brazil and the USA tied for the most orders coming from the country at 4 orders coming from each.
 
     **C ·**
 
@@ -194,6 +214,63 @@ def _():
     return (closing_prices,)
 
 
+@app.cell
+def _(closing_prices):
+    #Question 1
+
+    closing_prices["AAPL"]
+
+    print(f"The closing price of AAPL was ${closing_prices['AAPL']}")
+    return
+
+
+@app.cell
+def _(closing_prices):
+    # Question 2
+
+    closing_prices.get("TSLA")
+
+    return
+
+
+@app.cell
+def _(closing_prices):
+    # Question 3
+
+    above_two_hund = []
+
+    for _closing_prices in closing_prices:
+        if closing_prices[_closing_prices] > 200:
+            above_two_hund.append(_closing_prices)
+
+    above_two_hund
+    return
+
+
+@app.cell
+def _(closing_prices):
+    #Question 4
+
+    highest_price = 0
+    highest_ticker = ""
+
+    for _ticker in closing_prices:
+        if closing_prices[_ticker] > highest_price:
+            highest_price = closing_prices[_ticker]
+            highest_ticker = _ticker
+
+    highest_ticker, highest_price
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    For question 4, I needed a for loop to go through the different tickers and compare them to the previous values to see if the price is higher. I had AI write the code. Both highest price and ticker needed to be initialize in order for them to get values set within the for loop.
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -221,6 +298,17 @@ def _():
     return (ship_countries,)
 
 
+@app.cell
+def _(ship_countries):
+    country_counts = {}
+
+    for _ship_countries in ship_countries:
+        country_counts[_ship_countries] = country_counts.get(_ship_countries, 0) + 1
+
+    country_counts
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -234,7 +322,7 @@ def _(mo):
 @app.cell
 def _():
     first_holding = ("GOOG", 100, 131.36)
-    first_holding[0], len(first_holding)
+    first_holding[0],len(first_holding)
     return (first_holding,)
 
 
