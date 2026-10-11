@@ -202,7 +202,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    I used AI to help me write the print function that displayed the monthly payments in table format. These included the print statements in rows 8 and 9 and later row 10 of the loan_calculator function. I verified that the numbers were correct by going through each column that was outputted to confirm they made sense. For the months row, I confirmed they went from 1 to 12 times total number of years(360 for 30 year and 180 for 15 year). I then confirmed the payment was the same for each month for both of the functions, except for the last month which should have the remaining principal balance plus the interest payment. I confirmed the interest payments were going down over time, and the total interest paid was going up over time. Finally, I confirmed that the balance started at $400,000, went down over time and eventually ended up at $0. After confirming those values, I decided I also wanted a row that printed balance at month "0"- so I had AI create the code for printing a row at month "0" that showed the starting balance. After it created the code I confirmed the table output that information correctly.
+    I used AI to help me write the print function that displayed the monthly payments in table format. These included the print statements in rows 8 and 9 and later row 10 of the loan_calculator function. I verified that the numbers were correct by going through each column that was outputted to confirm they made sense. For the months row, I confirmed they went from 1 to 12 times total number of years(360 for 30 year and 180 for 15 year). I then confirmed the payment was the same for each month for both of the functions, except for the last month which should have the remaining principal balance plus the interest payment. I confirmed the interest payments were going down over time, and the total interest paid was going up over time. Finally, I confirmed that the balance started at $400,000, went down over time and eventually ended up at $0. After confirming those values, I decided I also wanted a row that printed balance at month "0"- so I had AI create the code for printing a row at month "0" that showed the starting balance.
     """)
     return
 
@@ -215,6 +215,77 @@ def _(mo):
     *Take at least one step past the main task, in any direction, and use your agent as much as you like. It does not have to work. State what you tried, what you found, and where it is in this notebook.*
     """)
     return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I'm going to create a new function that lets someone who doesn't write code try their own interest rate and extra monthly payment, using sliders. This uses a new function name so it does not change anything in the sections above.
+
+    I first had the AI create the code for two sliders: annual interest rate and extra payment each month. I went through each line of code to confirm I understood what it meant. The code used a "break" command, which allows the for loop to end when the extra payments cause the principal balance to drop below 0 prior to full loan term. It also used a different strategy for calculating the payment for the last month- it used an if statement that checks whether the payment is greater than the remaining balance plus interest payment. I had a hunch that if there were no extra payments, this would cause the last month's payment to be incorrect and not get the principal all the way to "0" since the rounded monthly payments would the final payment off by a few dollars. In order to fix this, I added the "if" statement I created above as an "elif" statement to ensure the remaining balance was paid if the total loan term was reached. After I copied over that "elif" statement I confirmed the table output that information correctly in both scenarios- where there was an extra payment and if there wasn't an extra payment.
+
+    I also noticed that the table created from the code would sometimes show a few extra values after the principal was at "0." I asked the AI and it pointed out that due to rounding, sometimes it takes a few extra calculations for the balance to settle to 0. It recommended I fix this by rounding the principal balance to 2 decimal points. I implemented this fix and then it ran correctly- without the extra rows.
+
+    I also added a slider for total loan amount that allowed that variable to also be varied. This would be helpful if someone was contemplating how much they should pay as a down payment.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    loan_amount_slider = mo.ui.slider(50000, 1000000, value=400000, step=5000, label="Loan amount ($)")
+    rate_slider = mo.ui.slider(1.0, 12.0, value=7.0, step=0.01, label="Annual interest rate (%)")
+    extra_payment_slider = mo.ui.slider(0, 2000, value=0, step=25, label="Extra payment each month ($)")
+
+    mo.vstack([loan_amount_slider, rate_slider, extra_payment_slider])
+    return extra_payment_slider, loan_amount_slider, rate_slider
+
+
+@app.cell
+def _(extra_payment_slider, loan_amount_slider, rate_slider):
+    custom_loan_amount = loan_amount_slider.value
+    custom_rate = rate_slider.value / 100
+    custom_extra_payment = extra_payment_slider.value
+
+    custom_interest_30, custom_months_30 = loan_calculator_with_extra(custom_loan_amount, custom_rate, 30, custom_extra_payment)
+
+    custom_years = custom_months_30 // 12
+    custom_remaining_months = custom_months_30 % 12
+
+    print(f"For a ${custom_loan_amount:,.2f} loan at {rate_slider.value:.2f}% with an extra ${custom_extra_payment:,.2f} paid each month:")
+    print(f"The 30-year loan would be paid off in {custom_years} years and {custom_remaining_months} months, instead of 30 years.")
+    print(f"Total interest paid would be ${custom_interest_30:,.2f}.")
+    return
+
+
+@app.function
+def loan_calculator_with_extra(loan_amount, interest_rate, loan_term, extra_payment):
+    total_interest_payments = 0
+    principal_balance = loan_amount
+    total_months = loan_term * 12
+    r = interest_rate / 12
+    payment = round(loan_amount * r / (1 - (1 + r) ** -total_months), 2)
+
+    print(f"\n{loan_term}-Year Loan at {interest_rate:.2%} with ${extra_payment:,.2f} extra per month")
+    print(f"{'Month':>6} {'Payment':>12} {'Interest':>12} {'Total Interest':>16} {'Balance':>14}")
+    print(f"{0:>6} {'--':>12} {'--':>12} {'--':>16} {principal_balance:>14,.2f}")
+
+    months_used = 0
+    for n in range(1, total_months + 1):
+        if principal_balance <= 0:
+            break
+        interest = principal_balance * r
+        total_interest_payments += interest
+        actual_payment = payment + extra_payment
+        if actual_payment > principal_balance + interest:
+            actual_payment = principal_balance + interest
+        elif n == total_months:
+            actual_payment = principal_balance + interest
+        principal_balance = round(principal_balance - actual_payment + interest, 2)
+        months_used += 1
+        print(f"{n:>6} {actual_payment:>12,.2f} {interest:>12,.2f} {total_interest_payments:>16,.2f} {principal_balance:>14,.2f}")
+
+    return total_interest_payments, months_used
 
 
 if __name__ == "__main__":
