@@ -114,6 +114,11 @@ def _(mo):
     return
 
 
+@app.cell
+def _():
+    return
+
+
 @app.function
 def loan_calculator(loan_amount, interest_rate, loan_term): 
     total_payments = 0
@@ -170,7 +175,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    I confirmed that the last line for both tables output by the function has the principal balance calculated to "0." This means that the total payments aligned with the calculated repayment period.
+    I confirmed that the last line for both tables output by the function has the principal balance calculated to "0." This means that the total payments aligned with the calculated repayment period. I also verified below that the manually calculated interest payments for month 100 aligned with the interest rates listed in the table for those months.
     """)
     return
 
