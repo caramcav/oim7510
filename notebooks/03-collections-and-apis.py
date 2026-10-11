@@ -229,7 +229,6 @@ def _(closing_prices):
     # Question 2
 
     closing_prices.get("TSLA")
-
     return
 
 
@@ -507,6 +506,17 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    1. list- want data that's easy to be reordered
+    2. set- want each entry only once
+    3. Dictionary- data that can be searched for easily via a key
+    4. Tuple- will include metadata that cannot be changed.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ## ✏️ D · The portfolio again
 
     Notebook 2 held the six holdings as a list of dictionaries. Here they are as a list of tuples, one holding per tuple.
@@ -533,6 +543,40 @@ def _():
         ("TSLA", 150, 255.70),
     ]
     holdings
+    return (holdings,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    dictionary since these values will be changing daily
+    """)
+    return
+
+
+@app.cell
+def _(holdings):
+    total_cost = 0
+
+    #use a for loop to get the share and price of every stock, then calculate the subtotal and add the total to total_cost
+    for stock in holdings:
+        shares = stock[1]
+        price = stock[2]
+        subtotal = shares * price
+        total_cost += subtotal
+
+    total_cost
+
+    return
+
+
+@app.cell
+def _(holdings):
+    total_cost_2 = 0
+
+    for _symbol,_shares, _price in holdings: 
+        subtotal_2 = _shares * _price 
+        total_cost_2 += subtotal_2
     return
 
 
@@ -687,6 +731,11 @@ def _(requests):
     return (misspelled_reply,)
 
 
+@app.cell
+def _():
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -727,11 +776,33 @@ def _(mo):
     return
 
 
+@app.cell
+def _(babson_weather):
+    wind_speed = babson_weather["current"]["wind_speed_10m"]
+    units = babson_weather["current_units"]["wind_speed_10m"]
+
+    print(f"Current wind speed is {wind_speed} {units}")
+
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     **F · Another town.** Search for `Wellesley` the way the misspelled search did, with the correct spelling. Take the first place out of `results`, then its `latitude`, `longitude` and `admin1`. *Check yourself: latitude 42.29649, in Massachusetts.*
     """)
+    return
+
+
+@app.cell
+def _(requests):
+    other_Wellesley = requests.get(
+        "https://geocoding-api.open-meteo.com/v1/search?name=Wellesley&",
+        timeout=10,)
+    #other_Wellesley.status_code, 
+    other_Wellesley.json()
+
+    other_Wellesley["results"][0]["latitude"]
     return
 
 
