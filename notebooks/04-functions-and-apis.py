@@ -201,6 +201,37 @@ def _(holdings, retirement_holdings):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    I had AI create the code for the "Going further" section. This function allows the user to also input how many of the top portfolios they'd like to see. The list is sorted by largest to smallest inherently due to the design of the for loops. The interior for loop finds the largest share price for the list, appends that, then removes it from the "remaining" list. At that point, the loop will find the next largest holding and add it to the list.
+    """)
+    return
+
+
+@app.cell
+def _(holdings):
+    def find_n_largest(portfolio, n):
+        remaining = list(portfolio)
+        top_n = []
+        for _pass in range(n):
+            largest_ticker = ""
+            largest_cost = 0
+            largest_index = None
+            for i in range(len(remaining)):
+                symbol, shares, price = remaining[i]
+                if shares * price > largest_cost:
+                    largest_cost = shares * price
+                    largest_ticker = symbol
+                    largest_index = i
+            top_n.append((largest_ticker, largest_cost))
+            remaining.pop(largest_index)
+        return top_n
+
+    find_n_largest(holdings, 3)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ## ✏️ B · Without `return`
 
     Copy `count_shares` into a new cell under a new name, and put `print(...)` where the `return` was. Call it and keep the result in a name. In a markdown cell under it, answer: what does that name hold, and what could the next cell do with it?
@@ -209,14 +240,24 @@ def _(mo):
 
 
 @app.cell
-def _(holdings, retirement_holdings):
+def _(holdings):
     def count_shares_2(portfolio): 
         total_shares = 0
         for symbol, shares, price in portfolio:
             total_shares += shares
-        total_share_count = print(total_shares)
+        print(total_shares)
 
-    count_shares_2(holdings),count_shares_2(retirement_holdings)
+    holdings_total_shares = count_shares_2(holdings)
+
+    holdings_total_shares
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    "holdings_total_shares" does not hold an actual number, it holds "none" since there is nothing returned by the function itself. When the function is called, it prints out the result (600), but that value could not be used by a future calculation.
+    """)
     return
 
 
@@ -351,6 +392,33 @@ def _(mo):
     return
 
 
+@app.cell
+def _(requests):
+    #Directly pasting URL from API website
+    norfolk_data = requests.get( 
+        "https://oim.zhili.dev/ma/towns?county=Norfolk&sort=income&order=desc&page=1&per_page=5",
+        timeout=10,
+    )
+
+    norfolk_income_results = norfolk_data.json()
+    norfolk_income_results
+    return
+
+
+@app.cell
+def _(requests):
+    #Updating "get" request to have parameters instead of long URL
+    norfolk_data_2 = requests.get( 
+        "https://oim.zhili.dev/ma/towns?",
+        params={"county":"Norfolk", "sort":"income", "order": "desc", "page":1 , "per_page":5},
+        timeout=10,
+    )
+
+    norfolk_income_results_2 = norfolk_data_2.json()
+    norfolk_income_results_2
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -364,6 +432,38 @@ def _(mo):
 
     **Going further.** Write `town_history(name)`, which takes a town's name, makes both requests, and returns the history.
     """)
+    return
+
+
+@app.cell
+def _(requests):
+    Wellesley_dor_info = requests.get( 
+        "https://oim.zhili.dev/ma/towns?",
+        params={"name":"Wellesley"},
+        timeout=10,
+    )
+
+    Wellesley_dor_info_json = Wellesley_dor_info.json()
+    Wellesley_dor_code = Wellesley_dor_info_json["items"][0]["dor_code"]
+    Wellesley_dor_code 
+    return (Wellesley_dor_code,)
+
+
+@app.cell
+def _(Wellesley_dor_code, requests):
+    Wellesley_history = requests.get(
+        f"https://oim.zhili.dev/ma/towns/{Wellesley_dor_code}/history",
+        params={"from_year": 2026, "to_year": 2026},
+        timeout=10,
+    )
+    Wellesley_history_json = Wellesley_history.json()
+    Wellesley_history_json
+
+    bill_2026 = Wellesley_history_json["years"][0]["average_single_family_bill_dollars"]
+
+    bill_2026_calc1 = round(Wellesley_history_json["years"][0]["average_single_family_value_dollars"]* Wellesley_history_json["years"][0]["residential_rate_per_thousand"]/1000,2)
+
+    print(f"The given average bill value from the website is ${bill_2026} for 2026. The calculated bill for fiscal year 2026 is ${bill_2026_calc1}.")
     return
 
 
