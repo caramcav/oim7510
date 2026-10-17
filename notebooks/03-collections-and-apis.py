@@ -179,11 +179,16 @@ def _(mo):
 
     **B ·France, Germany, Brazil and the USA tied for the most orders coming from the country at 4 orders coming from each.
 
-    **C ·**
+    **C ·
 
-    **D ·**
+    1. list- want data that's easy to be reordered
+    2. set- want each entry only once
+    3. Dictionary- data that can be searched for easily via a key
+    4. Tuple- will include metadata that cannot be changed.
 
-    **G ·**
+    **D ·I'd rather work with a tuple in this case since I can "unpack" the information within the first line of the for loop rather than having to individually call the different values based on their keys.
+
+    **G ·The first result for Babson Park is in Florida. The code still would have run and provided data for that location since there were results for an index of "0" and no error message, even if that is not the location we were looking for. Therefore, you have to be very careful when writing code that you confirm that the data is being pulled for the correct location.
     """)
     return
 
@@ -549,7 +554,7 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    dictionary since these values will be changing daily
+    I'd rather work with a tuple in this case since I can "unpack" the information within the first line of the for loop rather than having to individually call the different values based on their keys.
     """)
     return
 
@@ -566,7 +571,6 @@ def _(holdings):
         total_cost += subtotal
 
     total_cost
-
     return
 
 
@@ -577,6 +581,36 @@ def _(holdings):
     for _symbol,_shares, _price in holdings: 
         subtotal_2 = _shares * _price 
         total_cost_2 += subtotal_2
+
+    total_cost_2
+    return
+
+
+@app.cell
+def _(holdings):
+    # Agent's version: sum() adds up all the values produced by what's inside its parentheses
+    total_cost_agent = sum(_shares * _price for _symbol, _shares, _price in holdings)
+    total_cost_agent
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    My agent wrote the above code that utilizes "sum"- which is a generator expression. This is a more compact way to count the total, and is more efficient than the "for loop" method since it does not need to build a full list. When doing a large scale project, this could save a lot of memory.
+    """)
+    return
+
+
+@app.cell
+def _(holdings):
+    #Going further question. My answer aligns with the question description- TSLA is the largest ticker.
+    cost_per_holding = {}
+
+    for _symbol,_shares, _price in holdings: 
+        cost_per_holding[_symbol]=_shares * _price
+
+    cost_per_holding
     return
 
 
@@ -609,6 +643,47 @@ def _():
         ("2026-08-12", "AAPL", "sell", 40, 250.00),
     ]
     year_trades
+    return (year_trades,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Each ticker should have all of the active shares that have been bought at any point in time- so if there would two transcations, it should retain which order those transcations were made in, and the shares and the cost per share for those transactions. These should all be available under the Key of the ticker symbol. Once there is an instruction to "sell," the algorithm should first remove the shares from the earlist "buy" transaction. The total loss/gain can then be calculated from the sell price minus the buy price times the number of shares sold and the number of shares sold can be removed from that ticker. If there are more shares sold than are listed in the first transaction, the same method should be used to calculate the loss/gain and ending number of shares for the following transactions. Once all of the shares have been used up, it should be removed from the list since there are no longer any shares existing from it.
+    """)
+    return
+
+
+@app.cell
+def _(year_trades):
+    holdings_by_ticker = {}   # ticker -> list of [shares, price] batches, oldest first
+    realized_gains = {}       # ticker -> total gain so far
+
+    for _date, _ticker, _action, _shares, _price in year_trades:
+        if _action == "buy":
+            if _ticker not in holdings_by_ticker:
+                holdings_by_ticker[_ticker] = []
+            holdings_by_ticker[_ticker].append([_shares, _price])
+
+        elif _action == "sell":
+            _shares_to_sell = _shares
+            if _ticker not in realized_gains:
+                realized_gains[_ticker] = 0
+            while _shares_to_sell > 0:
+                _batch = holdings_by_ticker[_ticker][0]
+                _batch_shares, _batch_price = _batch
+                _shares_used = min(_shares_to_sell, _batch_shares)
+                realized_gains[_ticker] += _shares_used * (_price - _batch_price)
+                _batch[0] -= _shares_used
+                _shares_to_sell -= _shares_used
+                if _batch[0] == 0:
+                    holdings_by_ticker[_ticker].pop(0)
+
+
+    total_gains = realized_gains["AAPL"]+ realized_gains["MSFT"]
+
+    holdings_by_ticker, realized_gains, total_gains
+
     return
 
 
@@ -782,7 +857,6 @@ def _(babson_weather):
     units = babson_weather["current_units"]["wind_speed_10m"]
 
     print(f"Current wind speed is {wind_speed} {units}")
-
     return
 
 
@@ -799,11 +873,15 @@ def _(requests):
     other_Wellesley = requests.get(
         "https://geocoding-api.open-meteo.com/v1/search?name=Wellesley&",
         timeout=10,)
-    #other_Wellesley.status_code, 
-    other_Wellesley.json()
+    other_Wellesley.status_code
 
-    other_Wellesley["results"][0]["latitude"]
-    return
+    other_Wellesley_data = other_Wellesley.json()
+    latitude = other_Wellesley_data["results"][0]["latitude"]
+    longitute = other_Wellesley_data["results"][0]["longitude"]
+    state = other_Wellesley_data["results"][0]["admin1"]
+
+    print(f"The first result has a latitude of {latitude}, longitude of {longitute}, and is in the state of {state}")
+    return latitude, longitute
 
 
 @app.cell(hide_code=True)
@@ -813,6 +891,49 @@ def _(mo):
 
     **Going further.** Use F's coordinates to ask for Wellesley's current temperature. Build the address with an f-string, so that changing the town changes the forecast.
     """)
+    return
+
+
+@app.cell
+def _(requests):
+    Babson_Park = requests.get(
+        "https://geocoding-api.open-meteo.com/v1/search?name=Babson Park&",
+        timeout=10,)
+    Babson_Park.status_code
+
+    Babson_Park_data = Babson_Park.json()
+    Babson_Park_state= Babson_Park_data["results"][0]["admin1"]
+    print(f"The first Babson Park result is located in {Babson_Park_state}")
+    return (Babson_Park_data,)
+
+
+@app.cell
+def _(Babson_Park_data):
+    #generated by AI to help answer question G
+    Babson_Park_data["results"]
+    return
+
+
+@app.cell
+def _(latitude, longitute, requests):
+    wellesley_url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={latitude}&longitude={longitute}"
+        "&current=temperature_2m,wind_speed_10m"
+        "&temperature_unit=fahrenheit&wind_speed_unit=mph"
+        "&timezone=America/New_York"
+    )
+    wellesley_reply = requests.get(wellesley_url, timeout=10)
+    wellesley_reply.status_code
+    return (wellesley_reply,)
+
+
+@app.cell
+def _(wellesley_reply):
+    wellesley_weather = wellesley_reply.json()
+    temp = wellesley_weather["current"]["temperature_2m"]
+
+    print(f"The current temperature in Wellesley is {temp}°F")
     return
 
 
@@ -827,8 +948,86 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    I used AI to write the below code. It'd be risky to leave the dates and min/max temperatures as separate lists since it could easily have the wrong index called and the data could get mixed up. By making a dictionary with the combined values, there's a lower risk of those items getting mixed up.
+    """)
+    return
+
+
+@app.cell
+def _(requests):
+    babson_week_url = (
+        "https://api.open-meteo.com/v1/forecast"
+        "?latitude=42.2987&longitude=-71.2595"
+        "&current=temperature_2m,wind_speed_10m"
+        "&daily=temperature_2m_max,temperature_2m_min"
+        "&temperature_unit=fahrenheit&wind_speed_unit=mph"
+        "&timezone=America/New_York"
+    )
+    babson_week_reply = requests.get(babson_week_url, timeout=10)
+    babson_week_reply.status_code
+    return (babson_week_reply,)
+
+
+@app.cell
+def _(babson_week_reply):
+    babson_week_weather = babson_week_reply.json()
+    babson_week_weather["daily"]
+    return (babson_week_weather,)
+
+
+@app.cell
+def _(babson_week_weather):
+    dates = babson_week_weather["daily"]["time"]
+    highs = babson_week_weather["daily"]["temperature_2m_max"]
+    lows = babson_week_weather["daily"]["temperature_2m_min"]
+
+    week_forecast = []
+
+    for _i in range(len(dates)):
+        day_forecast = {
+            "date": dates[_i],
+            "high": highs[_i],
+            "low": lows[_i],
+        }
+        week_forecast.append(day_forecast)
+
+    week_forecast
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     > **Advanced · I · A second API.** Kraken, a cryptocurrency exchange, publishes prices with no key: `https://api.kraken.com/0/public/Ticker?pair=XBTUSD`. Request it, then change the pair to `XBTUSX`. Compare the status code and the reply with Open-Meteo's misspelled search. Both answer 200 to a request that failed, and each shows the failure in its own way.
     """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I used AI to write the code for section I. The main learning from this section is that the API will return a status code of 200 whenever the API understood the request and could respond, even if that reply is with an error message. It's important to look closely at specific error messages for different APIs.
+    """)
+    return
+
+
+@app.cell
+def _(requests):
+    kraken_good_reply = requests.get(
+        "https://api.kraken.com/0/public/Ticker?pair=XBTUSD",
+        timeout=10,
+    )
+    kraken_good_reply.status_code, kraken_good_reply.json()
+    return
+
+
+@app.cell
+def _(requests):
+    kraken_bad_reply = requests.get(
+        "https://api.kraken.com/0/public/Ticker?pair=XBTUSX",
+        timeout=10,
+    )
+    kraken_bad_reply.status_code, kraken_bad_reply.json()
     return
 
 
