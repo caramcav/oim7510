@@ -24,7 +24,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    This tool is to track orders from the past 7 days and report some key statistics from those orders including how many orders came in, how much they were worth, where they went, what sold most, and which orders have not shipped yet. A tool that generates and summarizes this information can be used by companies to understand and improve their business performance. For example, they can use this tool to track their performance over time by comparing their weekly total number of orders/revenue, can
+    This tool is to track orders from the past 7 days and report some key statistics from those orders including how many orders came in, how much they were worth, where they went, what sold most, and which orders have not shipped yet. A tool that generates and summarizes this information can be used by companies to understand and improve their business performance. For example, they can use this tool to track their performance over time by comparing their weekly total number of orders/revenue, can use insights from what products sold best/worst to modify their strategy, and keep an eye on which orders have not yet shipped.
     """)
     return
 
@@ -42,6 +42,29 @@ def _(mo):
     - Which check will you use in section 6, and which two numbers should agree?
 
     Commit with the message `mp2: plan before AI`.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    My tool will need the following functions:
+    1. Determine pagination: Function to determine the total number of results/pages from the API for orders in the past 7 days by pulling the json file and calling the "pagination" result from that json file. The inputs to that function will be the start date and end date. That function will return the number of items per page (per_page), total number of items(total), and total number of pages(pages).
+    2. How many orders came in will be the same as the total number of items returned("total") from the first function. Those can be assigned to a variable for total orders outside of that function.
+    3. Function to calculate how much orders were worth: input to function will be total number of pages, items per page, and total number of items that were output from the first function. A variable will be created within the function that uses a for loop to pull the "order_total_dollars" from each entry and keep a running total.
+    4. Function to determine where orders went: a similar input will be used as the previous function with total number of pages, items per page, and total number of items. For loops will again iterate through the pages and items on each page to collect the "ship_city" and "ship_country" from each order and keep a tally of the number of total orders going to each city. The tricky part for this one will be to ensure that if cities are in different countries they will be added to separate tallies. I will attempt to account for this my combining the city and country so they can be counted together as a ship location. The output of the function will be a sorted list of appended city/country locations with the total number of orders from those locations.
+    5. Function to determine what was ordered most: the same inputs of total pages, items per page, and total items will be used. The function will again use for loops to iterate through the order information. A list will be created within the function of each type of product, and the total count of a product will be increased by each order that includes an order for that product. The list will be sorted to have the most popular product at the beginning of the list and then returned from the function
+    6. Function to determine orders that have not shipped yet: similar inputs of total pages, items per page, and total items used. The function will also use for loops to go through all items and will create a list of the orders with "null" for "shipped_date". The function would return a tuple with the order numbers that have not yet been shipped. A further enhancement could keep a list of how long each succesful order took to ship so that information could also be analyzed.
+
+    I will check the different functions as follows:
+
+    1. I will enter information for same time span directly into API and will confirm the total number of results matches the number of results pulled via my code.
+    2. I will confirm that the total number on the API website matches the total number of orders returned by the functiom.
+    3. I will use the "sum" command within a line of code in order to add together the order_total_dollars for all of the records and wil confirm that matches the output from my function.
+    4. I will look through the list of ship locations to make sure they make sense (i.e. include city and country information, don't have duplicates where the same city/country are listed with different punctuation, etc.). I will also add up the number of orders from all of the locations and will confirm that number matches the total number of orders.
+    5. I will create a separate piece of code that looks for a few specific products to ensure the numbers for those match the output from the function.
+    6. I will add a counter within the function to confirm that the total number of orders evaluated matches the total number of items shipped in the past 7 days
     """)
     return
 
@@ -122,6 +145,14 @@ def _(mo):
     ## 10. Time Spent
 
     About how many hours this project took you outside class, as one number. It is not graded.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    30 minutes total on 17Oct
     """)
     return
 
