@@ -551,6 +551,87 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    The function should use a two nested for loops- the outside one to get through the different pages that are returned, and an internal one that goes through all of the entries on a given page. As it goes through the pages it should extend the list with the additional towns found on the web pages.
+    """)
+    return
+
+
+@app.cell
+def _(get_page):
+    def get_all_towns():
+        first_page = get_page(1)
+        total_pages = first_page["pagination"]["pages"]
+
+        all_towns = []
+        highest_bill_town = first_page["items"][0]["name"]
+        highest_bill_amount = first_page["items"][0]["average_single_family_bill_dollars"]
+        lowest_bill_town = first_page["items"][0]["name"]
+        lowest_bill_amount = first_page["items"][0]["average_single_family_bill_dollars"]
+
+        for _town in first_page["items"]:
+            all_towns.append(_town["name"])
+            if _town["average_single_family_bill_dollars"] > highest_bill_amount:
+                highest_bill_amount = _town["average_single_family_bill_dollars"]
+                highest_bill_town = _town["name"]
+            elif _town["average_single_family_bill_dollars"] < lowest_bill_amount:
+                lowest_bill_amount = _town["average_single_family_bill_dollars"]
+                lowest_bill_town = _town["name"]
+        for _page in range(2, total_pages + 1):
+            current_page_data = get_page(_page)
+            for _town in current_page_data["items"]:
+                all_towns.append(_town["name"])
+                if _town["average_single_family_bill_dollars"] > highest_bill_amount:
+                    highest_bill_amount = _town["average_single_family_bill_dollars"]
+                    highest_bill_town = _town["name"]
+                elif _town["average_single_family_bill_dollars"] < lowest_bill_amount:
+                    lowest_bill_amount = _town["average_single_family_bill_dollars"]
+                    lowest_bill_town = _town["name"]
+        print(f"{highest_bill_town} has the highest average single-family tax bill of ${highest_bill_amount} and {lowest_bill_town} has the lowest single-family tax bill amount of ${lowest_bill_amount}")
+        return all_towns
+
+    all_towns = get_all_towns()
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I added the if/elif lines of code to the above function to generate the information on which towns have the highest and lowest tax bills. I had AI generate the below to see if I could have created the code in a more efficient way. The AI used a function to create a full dictionary of all of the information, then found the relevant information using the min and max functions. However, this method might use more memory than my original method since it requires storing the full dictionary instead of just getting the info I specifically need.
+    """)
+    return
+
+
+@app.cell
+def _(get_page):
+    def get_all_town_records():
+        first_page = get_page(1)
+        total_pages = first_page["pagination"]["pages"]
+
+        all_records = list(first_page["items"])
+
+        for _page in range(2, total_pages + 1):
+            current_page_data = get_page(_page)
+            all_records.extend(current_page_data["items"])
+
+        return all_records
+
+    all_town_records = get_all_town_records()
+
+    highest_bill_town = max(all_town_records, key=lambda _town: _town["average_single_family_bill_dollars"])
+    lowest_bill_town = min(all_town_records, key=lambda _town: _town["average_single_family_bill_dollars"])
+
+    print(
+        f"{highest_bill_town['name']} has the highest average single-family tax bill "
+        f"of ${highest_bill_town['average_single_family_bill_dollars']:,} and "
+        f"{lowest_bill_town['name']} has the lowest at "
+        f"${lowest_bill_town['average_single_family_bill_dollars']:,}"
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # 4. Sending Data
 
     Every request so far has been a **GET**, which asks for data and changes nothing. A **POST** sends data for the server to keep. Submitting a form on a website is a POST.
