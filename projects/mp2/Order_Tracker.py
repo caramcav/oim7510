@@ -119,7 +119,8 @@ def _(date, requests, timedelta):
 
 
 @app.function
-#line created by AI since dollar fields from API sometimes came back as plain numbers and others as text. 
+#function created by AI since dollar fields from API sometimes came back as plain numbers and others as text. 
+#The outputs from the API are converted to numbers once they are stored, so future functions can treat them as numbers
 # "text/plain+float:457.5", so we only split on ":" if it is text
 def to_float(value):
     return float(value.split(":")[-1]) if isinstance(value, str) else float(value)
@@ -160,7 +161,7 @@ def _(from_date, pull_order_lines, requests, to_date, total_pages):
 
     orders = find_order_info_(total_pages, to_date, from_date)
     len(orders)
-    return
+    return (orders,)
 
 
 @app.cell
@@ -185,6 +186,40 @@ def _(requests):
         return lines
 
     return (pull_order_lines,)
+
+
+@app.cell
+def _(orders):
+    def revenue_calc(orders): 
+        total_revenue = 0
+        for order in orders:
+            total_revenue += order["order_total_dollars"]-order["freight_dollars"]
+        return total_revenue
+
+    total_revenue = revenue_calc(orders)
+    total_revenue
+    return
+
+
+@app.cell
+def _(orders):
+    def revenue_calc_by_country(orders): 
+        revenue_by_country = {}
+        for order in orders:
+            country = order["ship_country"]
+            amount = order["order_total_dollars"]-order["freight_dollars"]
+            if country in revenue_by_country:
+                revenue_by_country[country] += amount
+            else:
+                revenue_by_country[country] = amount
+        return revenue_by_country
+
+    revenue_by_country = revenue_calc_by_country(orders)
+
+    sum_country_orders = sum(revenue_by_country.values())
+
+    revenue_by_country,sum_country_orders
+    return
 
 
 @app.cell
