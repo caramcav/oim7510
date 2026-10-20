@@ -7,8 +7,10 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     import marimo as mo
+    from datetime import date, timedelta
+    import requests
 
-    return (mo,)
+    return date, mo, requests, timedelta
 
 
 @app.cell
@@ -80,6 +82,12 @@ def _(mo):
 
 
 @app.cell
+def _():
+    days = 7
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     ## 4. The Work
@@ -87,6 +95,96 @@ def _(mo):
     Your functions, and the code that uses them.
     """)
     return
+
+
+@app.cell
+def _(date, requests, timedelta):
+    def pull_pagination():
+        to_date = date.today()
+        from_date = to_date - timedelta(days=7)
+        print(from_date), print(to_date)
+        pagination_info = requests.get(
+            "https://oim.zhili.dev/shop/orders?",
+            params={"from_date": from_date, "to_date":to_date},
+            timeout=10,
+        )
+        pagination_info_json = pagination_info.json()
+        total_pages = pagination_info_json["pagination"]["pages"]
+        total_items = pagination_info_json["pagination"]["total"]
+        items_per_page = pagination_info_json["pagination"]["per_page"]
+        return total_pages, total_items, items_per_page, to_date, from_date
+
+    total_pages, total_items, items_per_page, to_date, from_date = pull_pagination()
+    return from_date, to_date, total_pages
+
+
+@app.function
+#line created by AI since dollar fields from API sometimes came back as plain numbers and others as text. 
+# "text/plain+float:457.5", so we only split on ":" if it is text
+def to_float(value):
+    return float(value.split(":")[-1]) if isinstance(value, str) else float(value)
+
+
+@app.cell
+def _(from_date, pull_order_lines, requests, to_date, total_pages):
+    def find_order_info_(total_pages, to_date, from_date):
+        orders = []
+        for page in range(1, total_pages + 1):
+            response = requests.get(
+                "https://oim.zhili.dev/shop/orders?",
+                params={"from_date": from_date, "to_date": to_date, "page": page},
+                timeout=10,
+            )
+            page_json = response.json()
+            for item in page_json["items"]:
+                # the list endpoint does not include "lines", so we call
+                # pull_order_lines to get each order's line items
+                lines = pull_order_lines(item["order_id"])
+                order = {
+                    "order_id": item["order_id"],
+                    "customer_id": item["customer_id"],
+                    "customer_name": item["customer_name"],
+                    "order_date": item["order_date"],
+                    "required_date": item["required_date"],
+                    "shipped_date": item["shipped_date"],
+                    "shipper": item["shipper"],
+                    "ship_city": item["ship_city"],
+                    "ship_country": item["ship_country"],
+                    "freight_dollars": to_float(item["freight_dollars"]),
+                    "line_count": item["line_count"],
+                    "order_total_dollars": to_float(item["order_total_dollars"]),
+                    "lines": lines,
+                }
+                orders.append(order)
+        return orders
+
+    orders = find_order_info_(total_pages, to_date, from_date)
+    len(orders)
+    return
+
+
+@app.cell
+def _(requests):
+    def pull_order_lines(order_id):
+        # calls the per-order detail endpoint to get one order's line items
+        detail_response = requests.get(
+            f"https://oim.zhili.dev/shop/orders/{order_id}",
+            timeout=10,
+        )
+        detail = detail_response.json()
+        lines = []
+        for line in detail.get("lines", []):
+            lines.append({
+                "product_id": line["product_id"],
+                "product_name": line["product_name"],
+                "unit_price_dollars": to_float(line["unit_price_dollars"]),
+                "quantity": line["quantity"],
+                "discount_fraction": to_float(line["discount_fraction"]),
+                "line_total_dollars": to_float(line["line_total_dollars"]),
+            })
+        return lines
+
+    return (pull_order_lines,)
 
 
 @app.cell
@@ -153,6 +251,7 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     30 minutes total on 17Oct
+    90 minutes on 18Oct
     """)
     return
 
