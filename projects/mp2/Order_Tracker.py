@@ -198,52 +198,26 @@ def _(requests):
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## Save Fetched Orders to CSV
+    ## Save Fetched Orders to JSON
 
-    Saves the records from `find_order_info_` to `projects/mp2/data/`. Since each order has a nested list of line items, two files are written: `orders.csv` (one row per order) and `order_lines.csv` (one row per line item, linked back by `order_id`).
+    Saves the records from `find_order_info_` to `projects/mp2/data/orders.json`. Since JSON supports nested structures, each order's line items are saved directly inside that order's record (no need for a separate file).
     """)
     return
 
 
 @app.cell
 def _(orders):
-    import csv
+    import json
     import os
 
     os.makedirs("projects/mp2/data", exist_ok=True)
 
-    # build one row per order, leaving out the nested "lines" list
-    order_rows = []
-    for _order in orders:
-        row = {}
-        for key in _order:
-            if key != "lines":
-                row[key] = _order[key]
-        order_rows.append(row)
+    # json.dump can handle the nested "lines" list directly, so we save
+    # the full list of orders (including each order's line items) in one file
+    with open("projects/mp2/data/orders.json", "w") as f:
+        json.dump(orders, f, indent=2)
 
-    with open("projects/mp2/data/orders.csv", "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(order_rows[0].keys()))
-        writer.writeheader()
-        for row in order_rows:
-            writer.writerow(row)
-
-    # build one row per line item, carrying the parent order_id along for linking back
-    line_rows = []
-    for _order in orders:
-        for _line in _order["lines"]:
-            row = {"order_id": _order["order_id"]}
-            for key in _line:
-                row[key] = _line[key]
-            line_rows.append(row)
-
-    with open("projects/mp2/data/order_lines.csv", "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(line_rows[0].keys()))
-        writer.writeheader()
-        for row in line_rows:
-            writer.writerow(row)
-
-    print(f"Saved {len(order_rows)} orders to projects/mp2/data/orders.csv")
-    print(f"Saved {len(line_rows)} line items to projects/mp2/data/order_lines.csv")
+    print(f"Saved {len(orders)} orders (with nested line items) to projects/mp2/data/orders.json")
     return
 
 
@@ -320,7 +294,6 @@ def _(orders):
         return top_5
 
     top_5_products_result = top_5_products(orders)
-    top_5_products_result
     return (top_5_products_result,)
 
 
@@ -334,7 +307,6 @@ def _(orders):
         return not_shipped_ids
 
     orders_not_shipped = not_shipped(orders)
-    orders_not_shipped
     return (orders_not_shipped,)
 
 
@@ -401,7 +373,7 @@ def _(from_date, to_date, total_items, total_pages):
     print(to_date)
     print(from_date)
 
-    #I manually input date range from 2026-10-16 to 2026-10-23 on API website and confirmed the pagination tab matches the total_items and total_pages numbers in the response body- which was 22 and 1, respectively. 
+    #I manually input date range from 2026-10-17 to 2026-10-23 on API website and confirmed the pagination tab matches the total_items and total_pages numbers in the response body- which was 22 and 1, respectively. 
 
     return
 
@@ -582,7 +554,7 @@ def _(mo):
     mo.md(r"""
     I added two visuals to this notebook to showcase additional insights about the order data. The code for both of these are included below this markdown cell.  The first is a bar chart showing how much revenue was generated per day in the past 7 days. I confirmed that these numbers were correct by adding up the revenues per day and confirming it matched the total revenue for the last 7 days. I found that there was a wide range in sales, and it dropped dramatically on October 22.
 
-    I also added a pie chart that visualizes the revenue per country that was determined in the revenue_by_country function. Orginally the AI had returned a chart that did not have the slices sorted by size- I asked it to update the code to have it sorted by descending order, so it was easier to read the chart.
+    I also added a pie chart that visualizes the revenue per country that was determined in the revenue_by_country function. Orginally the AI had returned a chart that did not have the slices sorted by size- I asked it to update the code to have it sorted by descending order, so it was easier to read the chart. This graphic shows that the top four countries by revenue make up over 50% of the revenue.
     """)
     return
 
@@ -698,10 +670,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    30 minutes total on 17Oct
-    90 minutes on 18Oct
-    60 minutes
-    60 min so far on 23Oct
+    9 hours
     """)
     return
 
