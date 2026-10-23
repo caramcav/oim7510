@@ -103,7 +103,6 @@ def _(mo):
 @app.cell
 def _(from_date, requests, to_date):
     def pull_pagination(from_date,to_date):
-        print(from_date), print(to_date)
         pagination_info = requests.get(
             "https://oim.zhili.dev/shop/orders?",
             params={"from_date": from_date, "to_date":to_date},
@@ -116,7 +115,7 @@ def _(from_date, requests, to_date):
         return total_pages, total_items, items_per_page
 
     total_pages, total_items, items_per_page = pull_pagination(from_date,to_date)
-    print(total_items)
+
     return total_items, total_pages
 
 
@@ -168,14 +167,8 @@ def _(from_date, pull_order_lines, requests, to_date, total_pages):
     for order in orders: 
         all_lines.append(order["lines"])
 
-    all_lines
-    return (orders,)
-
-
-@app.cell
-def _(orders):
     orders
-    return
+    return (orders,)
 
 
 @app.cell
@@ -208,10 +201,9 @@ def _(orders):
         total_revenue = 0
         for order in orders:
             total_revenue += order["order_total_dollars"]-order["freight_dollars"]
-        return total_revenue
+        return round(total_revenue, 2)
 
     total_revenue = revenue_calc(orders)
-    total_revenue
     return (total_revenue,)
 
 
@@ -243,11 +235,6 @@ def _(orders):
         return sorted_countries
 
     sorted_countries = revenue_calc_by_country(orders)
-
-    # sum just the revenue half of each (country, revenue) tuple
-    sum_country_orders = sum(revenue for country, revenue in sorted_countries)
-
-    sorted_countries, sum_country_orders
     return (sorted_countries,)
 
 
@@ -355,7 +342,76 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(from_date, to_date, total_items, total_pages):
+    #Check for pull_pagination function: 
+    print(total_items)
+    print(total_pages)
+    print(to_date)
+    print(from_date)
+
+    #I manually input date range from 2026-10-16 to 2026-10-23 on API website and confirmed the pagination tab matches the total_items and total_pages numbers in the response body- which was 24 and 1, respectively. 
+
+    return
+
+
+@app.cell
+def _(orders):
+    #Check for find_order_info, pull_order_lines, and to_float functions. I randomly chose an index from the list of orders, 9, and had the data for that displayed. I confirmed that the data displayed, including the order_info and all of the line items, matched what was in the API. I also confirmed that numbers were matching between this and API to confirm to_float function was converting them correctly. 
+    orders[9]
+    return
+
+
+@app.cell
+def _(orders, total_revenue):
+    #Check for revenue_calc function by using sum functions. The numbers match, but I realized that function was not rounding output. I updated the functions to have the output rounded to two decimal points. 
+    sum_order_totals = sum(order["order_total_dollars"] for order in orders)
+    sum_freight_totals = sum(order["freight_dollars"] for order in orders)
+    check_total_revenue = sum_order_totals - sum_freight_totals
+
+    check_total_revenue, total_revenue
+    return
+
+
+@app.cell
+def _(sorted_countries):
+    #check for revenue_calc_by_country function- confirm that sum of revenues for all of the countries adds up to values above. The function sums just the revenue half of each (country, revenue) tuple. The total revenue matches the revenues calculated above. 
+    sum_country_orders = sum(revenue for country, revenue in sorted_countries)
+    sum_country_orders
+
+    return
+
+
+@app.cell
+def _(orders, top_5_products_result):
+    #check for top_5_products function
+    #I picked two products that showed up in the top 5 and recount their units a different way
+    products_to_check = list(top_5_products_result.keys())[:2]
+
+    for product_name in products_to_check:
+        manual_count = 0
+        for _order in orders:
+            for line in _order["lines"]:
+                if line["product_name"] == product_name:
+                    manual_count += line["quantity"]
+        print(f"{product_name}: function says {top_5_products_result[product_name]}, manual count says {manual_count}")
+    return
+
+
+@app.cell
+def _(orders, orders_not_shipped):
+    #Check for not_shipped function:
+    #count shipped and not-shipped orders a different way, with a plain loop
+    shipped_count = 0
+    not_shipped_count = 0
+    for _order in orders:
+        if _order["shipped_date"] is None:
+            not_shipped_count += 1
+        else:
+            shipped_count += 1
+
+    print(f"shipped: {shipped_count}, not shipped: {not_shipped_count}, total orders: {len(orders)}")
+    print(f"shipped + not shipped == total orders: {shipped_count + not_shipped_count == len(orders)}")
+    print(f"manual not-shipped count matches function output: {not_shipped_count == len(orders_not_shipped)}")
     return
 
 
@@ -385,6 +441,24 @@ def _(mo):
     ## 8. Reading It Back
 
     Pick two functions in your notebook that your agent wrote or helped write. For each, write in your own words what goes in, what comes out, and one line you had to ask about. Then choose one change to what the tool does, such as another county, another week or another rule. Changing one value in your Inputs cell is enough. Write what you expect to change in the answer. Commit with the message `mp2: prediction`, make the change, run it, and write what happened and whether it matched.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I had my agent help write the functions for finding the order and line info. Originally the agent had pulled the order info and line info within the same function, which was difficult for me to decipher. I had the agent update the code to separate the functions.
+    - what goes in: The total number of pages of results from the API, which was returned from the pagination function, and the to_date and from_date that are evaluated automatically at the beginning of the code. Note: I originally thought I also had to add items per page and total items, but that is not required since items_per_page is a default and the code will automatically end the list once it get to the final "item" on the page.
+    - what comes out: A list of dictionaries, with one dictionary per order. The "line" key of the dictionary for each order also contains a list of dictionaries- with one dictionary per product that was included in the order.
+    - Line I had to ask about: I had to ask about to_float function that was incorporated into this function. Since data from APIs like this might have different sources, there's potential for them to have different data types. This to_float function ensures all numbers that are pulled are converted to a float type, which allows them to be used in subsequent calculations.
+    - Change to what the tool does: I am going to increase time period to 50 days in order to get the tool to return multiple pages of results. I expect the total number of orders/lines to increase since there will be a longer time period for data to pull from.
+
+    I also had my agent help me write the top_5_products function.
+    - What goes in: The data set of "orders" that was created from the find_order_info function.
+    - What comes out: The 5 products that had the highest quantity sold within the specified number of days.
+    - Line I had to ask about: I had to ask about why best_value and best_key were set to "None" within the code that was identifying the top five products. Setting these to "None" ensures that the first item that is read from the list is what all of the subsequent items will be compared to.
+    - Change to what the tool does: create a similar function but rank by total revenue instead of total quantity sold to see if most popular products are similar to products creating the most revenue. I predict that there will be a big difference in the "top 5 products" since higher priced items are often sold in lower quantities, but it doesn't take much quantity to drive a higher revenue.
     """)
     return
 
