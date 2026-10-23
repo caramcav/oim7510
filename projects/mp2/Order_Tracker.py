@@ -83,9 +83,9 @@ def _(mo):
 
 @app.cell
 def _(date, timedelta):
-    days = 50
+    days = 7
     to_date = date.today()
-    from_date = to_date - timedelta(days=days)
+    from_date = to_date - timedelta(days=days-1)
 
     return days, from_date, to_date
 
@@ -155,6 +155,8 @@ def _(from_date, pull_order_lines, requests, to_date, total_pages):
                     "freight_dollars": to_float(item["freight_dollars"]),
                     "line_count": item["line_count"],
                     "order_total_dollars": to_float(item["order_total_dollars"]),
+                    "employee_id": item["employee_id"],
+                    "employee_name": item["employee_name"],
                     "lines": lines,
                 }
                 orders.append(order)
@@ -166,8 +168,6 @@ def _(from_date, pull_order_lines, requests, to_date, total_pages):
     all_lines = []
     for order in orders: 
         all_lines.append(order["lines"])
-
-    orders
     return (orders,)
 
 
@@ -193,6 +193,58 @@ def _(requests):
         return lines
 
     return (pull_order_lines,)
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""
+    ## Save Fetched Orders to CSV
+
+    Saves the records from `find_order_info_` to `projects/mp2/data/`. Since each order has a nested list of line items, two files are written: `orders.csv` (one row per order) and `order_lines.csv` (one row per line item, linked back by `order_id`).
+    """)
+    return
+
+
+@app.cell
+def _(orders):
+    import csv
+    import os
+
+    os.makedirs("projects/mp2/data", exist_ok=True)
+
+    # build one row per order, leaving out the nested "lines" list
+    order_rows = []
+    for _order in orders:
+        row = {}
+        for key in _order:
+            if key != "lines":
+                row[key] = _order[key]
+        order_rows.append(row)
+
+    with open("projects/mp2/data/orders.csv", "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(order_rows[0].keys()))
+        writer.writeheader()
+        for row in order_rows:
+            writer.writerow(row)
+
+    # build one row per line item, carrying the parent order_id along for linking back
+    line_rows = []
+    for _order in orders:
+        for _line in _order["lines"]:
+            row = {"order_id": _order["order_id"]}
+            for key in _line:
+                row[key] = _line[key]
+            line_rows.append(row)
+
+    with open("projects/mp2/data/order_lines.csv", "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(line_rows[0].keys()))
+        writer.writeheader()
+        for row in line_rows:
+            writer.writerow(row)
+
+    print(f"Saved {len(order_rows)} orders to projects/mp2/data/orders.csv")
+    print(f"Saved {len(line_rows)} line items to projects/mp2/data/order_lines.csv")
+    return
 
 
 @app.cell
@@ -349,7 +401,7 @@ def _(from_date, to_date, total_items, total_pages):
     print(to_date)
     print(from_date)
 
-    #I manually input date range from 2026-10-16 to 2026-10-23 on API website and confirmed the pagination tab matches the total_items and total_pages numbers in the response body- which was 24 and 1, respectively. 
+    #I manually input date range from 2026-10-16 to 2026-10-23 on API website and confirmed the pagination tab matches the total_items and total_pages numbers in the response body- which was 22 and 1, respectively. 
 
     return
 
@@ -460,6 +512,7 @@ def _(mo):
     - What comes out: The 5 products that had the highest quantity sold within the specified number of days.
     - Line I had to ask about: I had to ask about why best_value and best_key were set to "None" within the code that was identifying the top five products. Setting these to "None" ensures that the first item that is read from the list is what all of the subsequent items will be compared to.
     - Change to what the tool does: create a similar function but rank by total revenue instead of total quantity sold to see if most popular products are similar to products creating the most revenue. I predict that there will be a big difference in the "top 5 products" since higher priced items are often sold in lower quantities, but it doesn't take much quantity to drive a higher revenue.
+    - Results: The results confirm that there is a big difference in the top 5 products based on revenue and based on quantity sold. In fact, there is no overlap in the top 5 products with each of those criteria.
     """)
     return
 
@@ -521,6 +574,114 @@ def _(mo):
 
     What you tried past the main task, what you found, and where it is in the notebook.
     """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I added two visuals to this notebook to showcase additional insights about the order data. The code for both of these are included below this markdown cell.  The first is a bar chart showing how much revenue was generated per day in the past 7 days. I confirmed that these numbers were correct by adding up the revenues per day and confirming it matched the total revenue for the last 7 days. I found that there was a wide range in sales, and it dropped dramatically on October 22.
+
+    I also added a pie chart that visualizes the revenue per country that was determined in the revenue_by_country function. Orginally the AI had returned a chart that did not have the slices sorted by size- I asked it to update the code to have it sorted by descending order, so it was easier to read the chart.
+    """)
+    return
+
+
+@app.cell
+def _():
+    import polars as pl
+    import altair as alt
+
+    return alt, pl
+
+
+@app.cell
+def _(orders, pl):
+    # add up each order's revenue (order total minus freight) into a dictionary keyed by the order's date
+    revenue_by_day = {}
+    for _order in orders:
+        order_day = _order["order_date"][:10]  # keep just the "YYYY-MM-DD" part of the date-time text
+        amount = _order["order_total_dollars"] - _order["freight_dollars"]
+        if order_day in revenue_by_day:
+            revenue_by_day[order_day] += amount
+        else:
+            revenue_by_day[order_day] = amount
+
+    # turn the dictionary into a polars dataframe, sorted by date, for charting
+    revenue_by_day_df = pl.DataFrame(
+        {
+            "order_day": list(revenue_by_day.keys()),
+            "revenue": [round(v, 2) for v in revenue_by_day.values()],
+        }
+    ).sort("order_day")
+
+    revenue_by_day_df
+    return (revenue_by_day_df,)
+
+
+@app.cell
+def _(revenue_by_day_df, total_revenue):
+    # check that revenue_by_day_df adds up to total_revenue from Section 5
+    sum_of_daily_revenue = round(revenue_by_day_df["revenue"].sum(), 2)
+
+    print(f"sum of revenue_by_day_df: {sum_of_daily_revenue}")
+    print(f"total_revenue (Section 5): {total_revenue}")
+    print(f"the two numbers match: {sum_of_daily_revenue == total_revenue}")
+    return
+
+
+@app.cell
+def _(alt, from_date, revenue_by_day_df, to_date):
+    # bar chart of revenue by day, built from revenue_by_day_df
+    revenue_by_day_chart = (
+        alt.Chart(revenue_by_day_df)
+        .mark_bar()
+        .encode(
+            x=alt.X("order_day:N", title="Order Day"),
+            y=alt.Y("revenue:Q", title="Revenue ($)"),
+            tooltip=["order_day", "revenue"],
+        )
+        .properties(
+            title=f"Revenue by Day ({from_date} to {to_date})",
+            width=500,
+            height=300,
+        )
+    )
+
+    revenue_by_day_chart
+    return
+
+
+@app.cell
+def _(pl, sorted_countries):
+    # build a dataframe from sorted_countries (already calculated earlier) for charting
+    country_revenue_rows = [{"country": country, "revenue": round(revenue, 2)} for country, revenue in sorted_countries]
+
+    country_revenue_df = pl.DataFrame(country_revenue_rows)
+    country_revenue_df
+    return (country_revenue_df,)
+
+
+@app.cell
+def _(alt, country_revenue_df, from_date, to_date):
+    # pie chart of revenue by country, slices ordered from largest to smallest
+    country_revenue_chart = (
+        alt.Chart(country_revenue_df)
+        .mark_arc()
+        .encode(
+            theta=alt.Theta("revenue:Q", title="Revenue ($)"),
+            color=alt.Color("country:N", title="Country", sort=alt.EncodingSortField(field="revenue", op="sum", order="descending")),
+            order=alt.Order("revenue:Q", sort="descending"),
+            tooltip=["country", "revenue"],
+        )
+        .properties(
+            title=f"Revenue by Country ({from_date} to {to_date})",
+            width=500,
+            height=350,
+        )
+    )
+
+    country_revenue_chart
     return
 
 
