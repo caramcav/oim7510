@@ -82,9 +82,12 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(date, timedelta):
     days = 7
-    return
+    to_date = date.today()
+    from_date = to_date - timedelta(days=7)
+
+    return from_date, to_date
 
 
 @app.cell
@@ -98,10 +101,8 @@ def _(mo):
 
 
 @app.cell
-def _(date, requests, timedelta):
-    def pull_pagination():
-        to_date = date.today()
-        from_date = to_date - timedelta(days=7)
+def _(from_date, requests, to_date):
+    def pull_pagination(from_date,to_date):
         print(from_date), print(to_date)
         pagination_info = requests.get(
             "https://oim.zhili.dev/shop/orders?",
@@ -112,10 +113,11 @@ def _(date, requests, timedelta):
         total_pages = pagination_info_json["pagination"]["pages"]
         total_items = pagination_info_json["pagination"]["total"]
         items_per_page = pagination_info_json["pagination"]["per_page"]
-        return total_pages, total_items, items_per_page, to_date, from_date
+        return total_pages, total_items, items_per_page
 
-    total_pages, total_items, items_per_page, to_date, from_date = pull_pagination()
-    return from_date, to_date, total_pages
+    total_pages, total_items, items_per_page = pull_pagination(from_date,to_date)
+    print(total_items)
+    return (total_pages,)
 
 
 @app.function
@@ -161,6 +163,12 @@ def _(from_date, pull_order_lines, requests, to_date, total_pages):
 
     orders = find_order_info_(total_pages, to_date, from_date)
     len(orders)
+
+    all_lines = []
+    for order in orders: 
+        all_lines.append(order["lines"])
+
+    all_lines
     return (orders,)
 
 
@@ -223,6 +231,55 @@ def _(orders):
 
 
 @app.cell
+def _(orders):
+    def top_5_products(orders):
+        total_per_product = {}
+        for order in orders:
+            for line in order["lines"]:
+                product = line["product_name"]
+                quantity = line["quantity"]
+                if product in total_per_product:
+                    total_per_product[product] += quantity
+                else:
+                    total_per_product[product] = quantity
+
+        # keep only the top 5 highest values: repeatedly find the
+        # largest remaining value and move it into top_5
+        top_5 = {}
+        remaining = dict(total_per_product)
+        for i in range(5):
+            best_key = None
+            best_value = None
+            for key in remaining:
+                if best_value is None or remaining[key] > best_value:
+                    best_key = key
+                    best_value = remaining[key]
+            if best_key is not None:
+                top_5[best_key] = best_value
+                del remaining[best_key]
+        return top_5
+
+    top_5_products_result = top_5_products(orders)
+    top_5_products_result
+    return
+
+
+app._unparsable_cell(
+    r"""
+    def not_shipped(orders): 
+        not_shipped = {}
+        for order in orders: 
+            if order["shipped'] == False:
+                not_shipped[order['id']] = order
+        return not_shipped
+
+    orders_not_shipped = not_shipped(orders)
+    """,
+    name="_"
+)
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     ## 5. The Answer
@@ -239,6 +296,11 @@ def _(mo):
 
     Reach at least one result a second way, in this notebook, and show that the two agree. Write a cell that gets the same number from other fields, or open the raw reply in your browser and find each number of one row of your table there. For instance: an average bill is close to the average value times the tax rate divided by 1,000; an order's total equals the sum of its lines; the number of records you collected equals the total the API reports.
     """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
