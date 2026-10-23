@@ -83,7 +83,7 @@ def _(mo):
 
 @app.cell
 def _(date, timedelta):
-    days = 7
+    days = 50
     to_date = date.today()
     from_date = to_date - timedelta(days=days)
 
@@ -453,6 +453,7 @@ def _(mo):
     - what comes out: A list of dictionaries, with one dictionary per order. The "line" key of the dictionary for each order also contains a list of dictionaries- with one dictionary per product that was included in the order.
     - Line I had to ask about: I had to ask about to_float function that was incorporated into this function. Since data from APIs like this might have different sources, there's potential for them to have different data types. This to_float function ensures all numbers that are pulled are converted to a float type, which allows them to be used in subsequent calculations.
     - Change to what the tool does: I am going to increase time period to 50 days in order to get the tool to return multiple pages of results. I expect the total number of orders/lines to increase since there will be a longer time period for data to pull from.
+    - Results: As I expected, total number of orders increased to 170 with the larger timeframe of 50 days.
 
     I also had my agent help me write the top_5_products function.
     - What goes in: The data set of "orders" that was created from the find_order_info function.
@@ -460,6 +461,56 @@ def _(mo):
     - Line I had to ask about: I had to ask about why best_value and best_key were set to "None" within the code that was identifying the top five products. Setting these to "None" ensures that the first item that is read from the list is what all of the subsequent items will be compared to.
     - Change to what the tool does: create a similar function but rank by total revenue instead of total quantity sold to see if most popular products are similar to products creating the most revenue. I predict that there will be a big difference in the "top 5 products" since higher priced items are often sold in lower quantities, but it doesn't take much quantity to drive a higher revenue.
     """)
+    return
+
+
+@app.cell
+def _(orders):
+    def top_5_products_by_revenue(orders):
+        revenue_per_product = {}
+        for order in orders:
+            for line in order["lines"]:
+                product = line["product_name"]
+                revenue = line["line_total_dollars"]
+                if product in revenue_per_product:
+                    revenue_per_product[product] += revenue
+                else:
+                    revenue_per_product[product] = revenue
+
+        # keep only the top 5 highest values: repeatedly find the
+        # largest remaining value and move it into top_5
+        top_5 = {}
+        remaining = dict(revenue_per_product)
+        for i in range(5):
+            best_key = None
+            best_value = None
+            for key in remaining:
+                if best_value is None or remaining[key] > best_value:
+                    best_key = key
+                    best_value = remaining[key]
+            if best_key is not None:
+                top_5[best_key] = round(best_value, 2)
+                del remaining[best_key]
+        return top_5
+
+    top_5_products_by_revenue_result = top_5_products_by_revenue(orders)
+    top_5_products_by_revenue_result
+    return
+
+
+@app.cell
+def _(orders, top_5_products_result):
+    #revenue for the top 5 products by quantity (from top_5_products_result)
+    revenue_for_top_5_by_quantity = {}
+    for _product_name in top_5_products_result:
+        _product_revenue = 0
+        for _order in orders:
+            for _line in _order["lines"]:
+                if _line["product_name"] == _product_name:
+                    _product_revenue += _line["line_total_dollars"]
+        revenue_for_top_5_by_quantity[_product_name] = round(_product_revenue, 2)
+
+    revenue_for_top_5_by_quantity
     return
 
 
