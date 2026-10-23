@@ -85,9 +85,9 @@ def _(mo):
 def _(date, timedelta):
     days = 7
     to_date = date.today()
-    from_date = to_date - timedelta(days=7)
+    from_date = to_date - timedelta(days=days)
 
-    return from_date, to_date
+    return days, from_date, to_date
 
 
 @app.cell
@@ -117,7 +117,7 @@ def _(from_date, requests, to_date):
 
     total_pages, total_items, items_per_page = pull_pagination(from_date,to_date)
     print(total_items)
-    return (total_pages,)
+    return total_items, total_pages
 
 
 @app.function
@@ -173,6 +173,12 @@ def _(from_date, pull_order_lines, requests, to_date, total_pages):
 
 
 @app.cell
+def _(orders):
+    orders
+    return
+
+
+@app.cell
 def _(requests):
     def pull_order_lines(order_id):
         # calls the per-order detail endpoint to get one order's line items
@@ -206,12 +212,12 @@ def _(orders):
 
     total_revenue = revenue_calc(orders)
     total_revenue
-    return
+    return (total_revenue,)
 
 
 @app.cell
 def _(orders):
-    def revenue_calc_by_country(orders): 
+    def revenue_calc_by_country(orders):
         revenue_by_country = {}
         for order in orders:
             country = order["ship_country"]
@@ -220,14 +226,29 @@ def _(orders):
                 revenue_by_country[country] += amount
             else:
                 revenue_by_country[country] = amount
-        return revenue_by_country
 
-    revenue_by_country = revenue_calc_by_country(orders)
+        # sort revenue_by_country from highest to lowest: repeatedly find the
+        # largest remaining value and move it into sorted_countries
+        remaining_countries = dict(revenue_by_country)
+        sorted_countries = []
+        while remaining_countries:
+            best_country = None
+            best_value = None
+            for country in remaining_countries:
+                if best_value is None or remaining_countries[country] > best_value:
+                    best_country = country
+                    best_value = remaining_countries[country]
+            sorted_countries.append((best_country, best_value))
+            del remaining_countries[best_country]
+        return sorted_countries
 
-    sum_country_orders = sum(revenue_by_country.values())
+    sorted_countries = revenue_calc_by_country(orders)
 
-    revenue_by_country,sum_country_orders
-    return
+    # sum just the revenue half of each (country, revenue) tuple
+    sum_country_orders = sum(revenue for country, revenue in sorted_countries)
+
+    sorted_countries, sum_country_orders
+    return (sorted_countries,)
 
 
 @app.cell
@@ -261,22 +282,21 @@ def _(orders):
 
     top_5_products_result = top_5_products(orders)
     top_5_products_result
-    return
+    return (top_5_products_result,)
 
 
-app._unparsable_cell(
-    r"""
-    def not_shipped(orders): 
-        not_shipped = {}
-        for order in orders: 
-            if order["shipped'] == False:
-                not_shipped[order['id']] = order
-        return not_shipped
+@app.cell
+def _(orders):
+    def not_shipped(orders):
+        not_shipped_ids = []
+        for order in orders:
+            if order["shipped_date"] == None:
+                not_shipped_ids.append(order['order_id'])
+        return not_shipped_ids
 
     orders_not_shipped = not_shipped(orders)
-    """,
-    name="_"
-)
+    orders_not_shipped
+    return (orders_not_shipped,)
 
 
 @app.cell
@@ -286,6 +306,41 @@ def _(mo):
 
     Your result table, printed with print and f-strings with the columns lined up, and one sentence that answers the question in section 1 with the numbers in it. Print the sentence from code with an f-string, so that it changes when the data does.
     """)
+    return
+
+
+@app.cell
+def _(
+    days,
+    from_date,
+    orders_not_shipped,
+    sorted_countries,
+    to_date,
+    top_5_products_result,
+    total_items,
+    total_revenue,
+):
+    print(f"ORDER REPORT: {from_date} to {to_date}")
+    print(f"Total orders: {total_items}")
+    print(f"Total revenue (excluding freight): ${total_revenue:,.2f}")
+    print()
+
+    print("Revenue by country:")
+    for country, revenue in sorted_countries:
+        print(f"  {country:<20} ${revenue:,.2f}")
+    print()
+
+    print("Top 5 products by units sold:")
+    for product, quantity in top_5_products_result.items():
+        print(f"  {product:<30} {quantity:>6} units")
+    print()
+
+    print(f"Orders not shipped yet ({len(orders_not_shipped)}):")
+    for order_id in orders_not_shipped:
+        print(f"  {order_id}")
+    print()
+
+    print(f"In the past {days} days, we received {total_items} orders worth ${total_revenue:,.2f} in revenue, and {len(orders_not_shipped)} of those orders have not shipped yet.")
     return
 
 
@@ -310,6 +365,16 @@ def _(mo):
     ## 7. Working With the Agent
 
     Pick one piece of AI output you did not accept as-is. What did it give you, what did you change, and how did you know? Point to the commit or the cell. If the agent got it right the first time: What did you do to verify that? Pointing to your check in section 6 is enough.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    When I worked with the agent on the "not_shipped" function, it originally suggested the code "if order["shipped"] == False" for evaluating whether the orders had shipped. I saved this original output as commit 7954688. I knew that the key in the dictionary for shipping status was not "shipped", so I looked into the dictionary of orders and confirmed that the shipped status was indicated by "shipped_date" and that my function had saved the ship_date as "None" if it was listed as null on the API. I updated the code accordigly to correct the line of code to "if order["shipped_date"] == None:".
+
+    After I corrected that logic I looked at the output of the not_shipped orders. I saw that the entirety of the information on the orders was included in a dictionary instead of having the specific order IDs listed. I asked the AI how to correct the logic within the function and it pointed out I should use the "append" functionality instead of the "not_shipped[order['id']] = order" line that it had originally suggested in the code. I confirmed that the not_shipped orders only listed the order ids.
     """)
     return
 
@@ -349,6 +414,8 @@ def _(mo):
     mo.md(r"""
     30 minutes total on 17Oct
     90 minutes on 18Oct
+    60 minutes
+    60 min so far on 23Oct
     """)
     return
 
