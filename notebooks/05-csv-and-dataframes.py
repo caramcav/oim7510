@@ -344,7 +344,7 @@ def _(pl, town_table):
         town_table.group_by("county")
         .agg(
             pl.len().alias("towns"),
-            (pl.col("average_single_family_value_dollars") >= 1_000_000)
+            (pl.col("average_single_family_value_dollars") >= 2_000_000)
             .sum()
             .alias("million_dollar_towns"),
         )
@@ -424,7 +424,7 @@ def _(mo, town_table):
         f"""
         SELECT county, COUNT(*) AS towns
         FROM town_table
-        WHERE average_single_family_value_dollars >= 1000000
+        WHERE average_single_family_value_dollars >= 2000000
         GROUP BY county
         ORDER BY towns DESC
         """
@@ -456,6 +456,8 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     Answer to question C: All of the counties counts can go down and no counties can go up- if the average home price is greater than $2,000,000, it also would have to be higher than $1,000,000.
+
+    I confirmed that the number of counties that meet the criteria >$2M go down and that there are 7 total towns meeting the new criteria.
     """)
     return
 
