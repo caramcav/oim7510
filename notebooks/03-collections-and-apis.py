@@ -683,7 +683,6 @@ def _(year_trades):
     total_gains = realized_gains["AAPL"]+ realized_gains["MSFT"]
 
     holdings_by_ticker, realized_gains, total_gains
-
     return
 
 
@@ -804,11 +803,6 @@ def _(requests):
     )
     misspelled_reply.status_code, misspelled_reply.json()
     return (misspelled_reply,)
-
-
-@app.cell
-def _():
-    return
 
 
 @app.cell(hide_code=True)

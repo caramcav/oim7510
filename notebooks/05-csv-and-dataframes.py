@@ -203,8 +203,9 @@ def _(mo):
 def _(towns_from_file):
     #Question 1
 
-    number_multi_mill_towns = 0
+    number_mill_towns = 0
     mil_by_county = {}
+
 
     for town in towns_from_file: 
         if int(town['average_single_family_value_dollars'])>1000000:
@@ -212,18 +213,46 @@ def _(towns_from_file):
             if county not in mil_by_county:
                 mil_by_county[county]=0
             mil_by_county[county] += 1
+            number_mill_towns += 1
 
-    mil_by_county
+    most_million_county = None
+    max_million_towns = 0
+
+    for _county in mil_by_county: 
+        if mil_by_county[_county] > max_million_towns: 
+            max_million_towns = mil_by_county[_county]
+            most_million_county = _county
+        
+
+    mil_by_county, number_mill_towns, most_million_county
+
+    print(f"There are {number_mill_towns} million-dollar towns in Massachusetts and the county with the most million dollar towns is {most_million_county}")
+
+
     return
 
 
 @app.cell
-def _():
+def _(towns_from_file):
     #Question 2
 
     largest_town = ""
+    largest_town_size = None
     smallest_town = ""
+    smallest_town_size = None
 
+    for _town in towns_from_file:
+
+        if largest_town_size is None or int(_town["population"])>largest_town_size:
+            largest_town = _town["name"]
+            largest_town_size = int(_town["population"])
+        if smallest_town_size is None or int(_town["population"]) < smallest_town_size:
+            smallest_town = _town["name"]
+            smallest_town_size = int(_town["population"]) 
+     
+    largest_town, smallest_town 
+
+    print(f"{largest_town} has the largest population with {largest_town_size} people and {smallest_town} has the smallest population with {smallest_town_size} people.")
     return
 
 
