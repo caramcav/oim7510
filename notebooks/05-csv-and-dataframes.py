@@ -518,6 +518,40 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    Question: What share of towns in each Massachusetts county have a population of 50,000 people or more?
+    """)
+    return
+
+
+@app.cell
+def _(alt, mo, pl, town_table):
+    large_town_share_by_county = (
+        town_table.group_by("county")
+        .agg(
+            pl.len().alias("towns"),
+            (pl.col("population") >= 50_000).sum().alias("large_towns"),
+        )
+        .with_columns((pl.col("large_towns") / pl.col("towns")).alias("share"))
+        .sort("share", descending=True)
+    )
+
+    large_town_chart = mo.ui.altair_chart(
+        large_town_share_by_county.plot.bar(
+            y=alt.Y("county", sort="-x", title="County"),
+            x=alt.X(
+                "share",
+                title="Share of towns with population 50,000 or more",
+                axis=alt.Axis(format="%"),
+            ),
+        ).properties(title="Share of each county's towns with 50,000+ people")
+    )
+    large_town_chart
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # 🚀 This Week's Work
 
     1. **What is due is listed under *Before next session* in the post-class notes.** I post them on the session page after each class, with the sections we reached, and the checkpoint on Canvas lists the same items.
