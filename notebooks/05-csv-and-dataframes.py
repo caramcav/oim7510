@@ -376,6 +376,36 @@ def _(mo):
     return
 
 
+@app.cell
+def _(pl, town_table):
+    #Question 1 Part 1
+    town_counts = town_table.group_by("county").agg(pl.len().alias("towns")).sort("county")
+
+    town_counts
+    return
+
+
+@app.cell
+def _(ma_counties, pl):
+    #Question 1 Part 2
+
+    pl.DataFrame(ma_counties)
+    return
+
+
+@app.cell
+def _(pl, town_table):
+    #Question 2
+
+    highest_bill = (
+        town_table.filter(pl.col("population")>50_000)
+        .sort("average_single_family_bill_dollars",descending=True).head(5)
+     )
+
+    highest_bill
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
