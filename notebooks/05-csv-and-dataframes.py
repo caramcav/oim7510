@@ -455,6 +455,14 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    Answer to question C: All of the counties counts can go down and no counties can go up- if the average home price is greater than $2,000,000, it also would have to be higher than $1,000,000.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     # 4. The First Chart
 
     Draw the share. `.plot.bar()` on a DataFrame draws one bar per row, with a library called **altair**. `alt.X()` and `alt.Y()` name each axis's column and give it a title a reader can understand, and `.properties(title=...)` states what the chart shows.
