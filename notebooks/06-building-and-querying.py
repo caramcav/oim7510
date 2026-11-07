@@ -224,6 +224,42 @@ def _(mo):
     return
 
 
+@app.cell
+def _(database, duckdb):
+    with duckdb.connect(database) as _con: 
+       #did not create table for towns again since it was already created in cells before 
+        _con.execute("DROP TABLE IF EXISTS town_bills")
+        _con.execute("""
+        CREATE TABLE town_bills(
+            town VARCHAR NOT NULL REFERENCES towns(name),
+            year INTEGER NOT NULL,
+            average_single_fam_bill INTEGER,
+            PRIMARY KEY   (town,year)
+            )
+            """)
+        _con.execute("INSERT INTO town_bills VALUES('Wellesley', 1997, 4555)")
+        _con.execute("INSERT INTO town_bills VALUES('Wellesley', 2014, 12469)")
+
+    #tested that table did not allow second Wellesley row from 2014 to be added. "Constraint error-Duplicate key" was generated. 
+    #tested that table did not allow city of "London" in 2014 to be added. "Constraint error" from SQL. 
+    return
+
+
+@app.cell
+def _(ask):
+    #checking the table structure of town_bills
+    ask("DESCRIBE town_bills")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("""SELECT town, year::VARCHAR AS year, 
+        average_single_fam_bill
+        FROM town_bills""")
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
