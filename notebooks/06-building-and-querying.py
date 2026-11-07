@@ -254,6 +254,8 @@ def _(ask):
 
 @app.cell
 def _(ask):
+    #checking that the data was loaded into table correctly 
+
     ask("""SELECT town, year::VARCHAR AS year, 
         average_single_fam_bill
         FROM town_bills""")
@@ -296,6 +298,45 @@ def _(mo):
     return
 
 
+@app.cell
+def _(database, duckdb):
+    try: 
+        with duckdb.connect(database) as _con: 
+            _con.execute("INSERT INTO towns VALUES ('Wellesley','Norfolk',4566, 10000,7000)")
+        _refused = "accepted"
+    except duckdb.ConstraintException as _error:
+        _refused = str(_error).splitlines()[0]
+
+    _refused
+    return
+
+
+@app.cell
+def _(database, duckdb):
+    try: 
+        with duckdb.connect(database) as _con: 
+            _con.execute("INSERT INTO towns VALUES ('London','Norfolk',0, 10000,7000)")
+        _refused = "accepted"
+    except duckdb.ConstraintException as _error:
+        _refused = str(_error).splitlines()[0]
+
+    _refused
+    return
+
+
+@app.cell
+def _(database, duckdb):
+    try: 
+        with duckdb.connect(database) as _con: 
+            _con.execute("INSERT INTO towns VALUES ('London','England',50000, 10000,7000)")
+        _refused = "accepted"
+    except duckdb.ConstraintException as _error:
+        _refused = str(_error).splitlines()[0]
+
+    _refused
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -329,6 +370,15 @@ def _(mo):
 
     **Going further.** Ask the same question of `counties` and `towns` together: which county is each of those five in, and what share of its county's people does each hold? That needs both tables at once, which the topic slides call a join.
     """)
+    return
+
+
+@app.cell
+def _(ask):
+    ask("""
+        SELECT name, population, average_single_family_bill_dollars
+        FROM towns
+        """)
     return
 
 
