@@ -1,0 +1,9 @@
+treatment_id,treatment_name,std_min,price,int_cost
+1,Manual Therapy,30,65.0,20.0
+2,Therapeutic Exercise,30,55.0,15.0
+3,Ultrasound Therapy,15,40.0,8.0
+4,Electrical Stimulation,15,35.0,7.0
+5,Gait Training,30,60.0,18.0
+6,Joint Mobilization,30,70.0,22.0
+7,Post-Surgical Rehab,45,90.0,30.0
+8,Balance Training,30,50.0,14.0

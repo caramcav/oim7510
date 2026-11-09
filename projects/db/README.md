@@ -11,7 +11,8 @@ erDiagram
     TREATMENTS ||--o{ APPOINTMENT_TREATMENTS : used_in
 
     TREATMENTS {
-        str treatment_name PK
+        int treatment_id PK
+        str treatment_name
         int std_min
         float price
         float int_cost
@@ -49,7 +50,9 @@ erDiagram
 
     APPOINTMENT_TREATMENTS {
         int appt_id FK
-        str treatment_name FK
+        int treatment_id FK
+        float price_charged
+        int minutes_spent
     }
 
     REFERRALS {
@@ -62,5 +65,13 @@ erDiagram
 ```
 
 3. What one row means: 
+- One row in "Therapists" is for one therapist that works at the clinic and their associated information
+- One row in "Patients" is for one patient that has created an account at the clinic, who may or may not have have had an appointment before
+- One row in "Referrals" is for one referral from one physician for one patient. 
+- One row in "Appointments" is for one appointment scheduled on a given date with one therapist and one patient. 
+- One row in "Appointment Treatments" shows one treatment given within the clinic and which appointment it is associated with. 
+- One row in "Treatments" is for one type of treatment and the associated information for that type of treatment. 
+
 
 4. Design Choices. 
+
