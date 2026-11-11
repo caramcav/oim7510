@@ -406,6 +406,23 @@ def _(ask):
     return
 
 
+@app.cell
+def _(ask):
+    ask("""
+    SELECT county, count(name) AS number_of_towns, sum(population) AS total_population, round(avg(population)) AS average_population,
+    -- find mean of average_single_family_bill_dollars, max of ...., min of .... 
+    round(avg(average_single_family_bill_dollars)) as average_bill,
+    max(average_single_family_bill_dollars) as max_bill,
+    min(average_single_family_bill_dollars) as min_bill
+    FROM towns
+    GROUP BY county
+    ORDER BY avg(average_single_family_bill_dollars) DESC
+    """)
+
+    #removing county: adds together results from all counties/lines from table and shows them within a single row. 
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -421,7 +438,7 @@ def _(ask):
         FROM towns
         WHERE average_single_family_bill_dollars > 10000
         GROUP BY county
-        HAVING count(*) > 5
+        HAVING count(*) > 5 AND county LIKE '%sex'
         ORDER BY towns DESC
     """)
     return
@@ -438,6 +455,11 @@ def _(mo):
 
     **Going further.** Answer one question of your own about the towns with `GROUP BY`, and check it in polars on `town_rows`. Or download the TV show database from [Downloads](https://oim7510.github.io/downloads/), keep it out of your repository, and answer the two TV show questions from the topic slides.
     """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
