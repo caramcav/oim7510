@@ -15,7 +15,7 @@
 
 import marimo
 
-__generated_with = "0.25.1"
+__generated_with = "0.24.2"
 app = marimo.App(width="medium", sql_output="polars")
 
 
@@ -111,6 +111,8 @@ def _(ask, northwind_database):
     ask(northwind_database, """
         SELECT table_name FROM information_schema.tables ORDER BY table_name
     """)
+
+    #tells information about database 
     return
 
 
@@ -127,7 +129,7 @@ def _(ask, northwind_database):
     ask(northwind_database, """
         SELECT column_name, data_type
         FROM information_schema.columns
-        WHERE table_name = 'order_details'
+        WHERE table_name = 'orders'
     """)
     return
 
@@ -231,11 +233,11 @@ def _(mo):
 @app.cell
 def _(ask, towns_database):
     ask(towns_database, """
-        SELECT c.name
+        SELECT c.name, t.name as Town, t.average_single_family_bill_dollars
         FROM counties AS c
         LEFT JOIN towns AS t
             ON t.county = c.name AND t.average_single_family_bill_dollars > 15000
-        WHERE t.name IS NULL
+        WHERE t.name IS NOT NULL
         ORDER BY c.name
     """)
     return
@@ -443,7 +445,7 @@ def _(mo, os, pl):
             return pl.DataFrame(_cursor.fetchall(), schema=_columns, orient="row")
 
     ask_server("SELECT TOP 5 SalesOrderID, OrderDate, Freight FROM Sales.SalesOrderHeader ORDER BY SalesOrderID")
-    return (ask_server,)
+    return
 
 
 @app.cell(hide_code=True)
