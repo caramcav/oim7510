@@ -37,7 +37,7 @@ def _():
     as_of
 
     #as_of date will always be October 31, 2026, regardless of when the notebook is run. 
-    return (as_of,)
+    return as_of, datetime
 
 
 @app.cell
@@ -164,6 +164,15 @@ def _(as_of, ask):
 
 
 @app.cell
+def _(datetime, mo):
+    #shows the last time csv file was updated
+
+    import os
+    datetime.datetime.fromtimestamp(os.path.getmtime(mo.notebook_dir() / "data" / "appointments.csv"))
+    return
+
+
+@app.cell
 def _(as_of, ask):
     ask(f"""
         SELECT
@@ -173,6 +182,31 @@ def _(as_of, ask):
         FROM appointments
         GROUP BY period, status
         ORDER BY period, status
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #Confirms that data generator's function worked to not have any appointments with the same therapist overlap, even if they have different start times. 
+
+    ask(f"""
+        SELECT
+            a.appt_id AS appt_1,
+            b.appt_id AS appt_2,
+            a.therapist_id,
+            a.start_date,
+            a.start_time AS start_1,
+            a.length    AS length_1,
+            b.start_time AS start_2,
+            b.length     AS length_2
+        FROM appointments a
+        JOIN appointments b
+            ON a.therapist_id = b.therapist_id
+           AND a.start_date   = b.start_date
+           AND a.appt_id < b.appt_id
+        WHERE a.start_time < b.start_time + INTERVAL (b.length) MINUTE
+          AND b.start_time < a.start_time + INTERVAL (a.length) MINUTE
     """)
     return
 

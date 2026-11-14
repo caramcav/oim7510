@@ -1,7 +1,7 @@
 therapist_id,first_name,last_name,cred,email,hire_date
-1,Angel,Hill,DPT,donaldgarcia@example.net,2022-01-12
-2,Christopher,Henderson,DPT,davisjesse@example.net,2024-10-23
-3,James,Santos,PTA,lrobinson@example.com,2015-04-17
-4,Adam,Shaffer,DPT,jpeterson@example.org,2023-11-26
-5,Matthew,Davis,DPT,howardmaurice@example.com,2025-07-12
-6,Jessica,Herrera,DPT,smiller@example.net,2023-11-17
+1,Angel,Hill,DPT,donaldgarcia@example.net,2021-12-04
+2,Christopher,Henderson,DPT,davisjesse@example.net,2024-08-30
+3,James,Santos,PTA,lrobinson@example.com,2015-04-15
+4,Adam,Shaffer,DPT,jpeterson@example.org,2023-10-08
+5,Matthew,Davis,DPT,howardmaurice@example.com,2025-05-14
+6,Jessica,Herrera,DPT,smiller@example.net,2023-09-28

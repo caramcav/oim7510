@@ -15,7 +15,7 @@ random.seed(SEED)
 fake = Faker()
 Faker.seed(SEED)
 
-AS_OF = date(2026, 12, 31)
+AS_OF = date(2026, 10, 31)
 HISTORY_START = AS_OF - timedelta(days=365)
 FUTURE_END = AS_OF + timedelta(days=21)
 
@@ -188,7 +188,8 @@ def make_appointments(referred_no_appt_ids):
             continue
         appointment_patient_ids.append(patient_id)
 
-    taken_slots = set()  # (therapist_id, start_date, start_time) already booked
+    # (therapist_id, start_date) -> list of (start_minute, end_minute) already booked
+    busy_intervals = {}
     rows = []
     appt_id = 1
     total_days = (FUTURE_END - HISTORY_START).days
@@ -197,12 +198,23 @@ def make_appointments(referred_no_appt_ids):
         therapist_id = random.randint(1, N_THERAPISTS)
         offset_days = random.randint(0, total_days)
         start_date = HISTORY_START + timedelta(days=offset_days)
-        start_time = minutes_to_time_string(random.choice(SLOT_MINUTES))
+        start_minute = random.choice(SLOT_MINUTES)
+        length = random.choice(LENGTHS)
+        end_minute = start_minute + length
 
-        slot_key = (therapist_id, start_date, start_time)
-        if slot_key in taken_slots:
+        day_key = (therapist_id, start_date)
+        existing_intervals = busy_intervals.get(day_key, [])
+
+        overlaps = False
+        for busy_start, busy_end in existing_intervals:
+            if start_minute < busy_end and end_minute > busy_start:
+                overlaps = True
+                break
+        if overlaps:
             continue
-        taken_slots.add(slot_key)
+
+        existing_intervals.append((start_minute, end_minute))
+        busy_intervals[day_key] = existing_intervals
 
         if start_date > AS_OF:
             status = "booked"
@@ -217,8 +229,8 @@ def make_appointments(referred_no_appt_ids):
                 "patient_id": random.choice(appointment_patient_ids),
                 "therapist_id": therapist_id,
                 "start_date": start_date.isoformat(),
-                "start_time": start_time,
-                "length": random.choice(LENGTHS),
+                "start_time": minutes_to_time_string(start_minute),
+                "length": length,
                 "status": status,
             }
         )
