@@ -365,6 +365,41 @@ def _(database, duckdb):
 def _(mo):
     mo.md(r"""
     ## 6. Answers You Already Knew
+
+    Three queries whose answers you knew before you ran them, because you know what you asked your agent for, with the answer you expected written next to each.
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #Query 1: First date of appointments should be 31Nov25
+
+    ask("""
+        SELECT min(start_date) AS first_appt_date
+        FROM appointments
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #Query 2: Total number of appointments was specified as 3,000
+    ask("""
+        SELECT count(*) AS total_appointments
+        FROM appointments
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #Query 3: Three options for appointment lengths should be 30, 45 and 60 minutes. 
+
+    ask("""
+        SELECT DISTINCT length
+        FROM appointments
+        ORDER BY length
     """)
     return
 
