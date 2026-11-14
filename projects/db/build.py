@@ -127,30 +127,29 @@ def _(as_of, database, duckdb, mo):
                 PRIMARY KEY (appt_id, treatment_id)
             )
         """)
-        _con.execute("""
-            CREATE VIEW no_show_rate_by_therapist AS
-                SELECT
-                    therapist_id,
-                    count(*) FILTER (WHERE status = 'no-show') AS no_shows,
-                    count(*) FILTER (WHERE status IN ('completed', 'no-show')) AS completed_and_no_shows,
-                    count(*) FILTER (WHERE status = 'no-show') * 1.0
-                        / count(*) FILTER (WHERE status IN ('completed', 'no-show')) AS no_show_rate
-                FROM appointments
-                GROUP BY therapist_id
-        """)
-
         _con.execute(f"""
-        CREATE VIEW no_show_rate_last_week_by_therapist AS
+        CREATE VIEW no_show_rate_by_therapist AS
             SELECT
-                therapist_id,
-                count(*) FILTER (WHERE status = 'no-show') AS no_shows,
-                count(*) FILTER (WHERE status IN ('completed', 'no-show')) AS completed_and_no_shows,
-                count(*) FILTER (WHERE status = 'no-show') * 1.0
-                    / NULLIF(count(*) FILTER (WHERE status IN ('completed', 'no-show')), 0) AS no_show_rate
-            FROM appointments
-            WHERE start_date BETWEEN DATE '{as_of}' - INTERVAL 6 DAY AND DATE '{as_of}'
-            GROUP BY therapist_id
-    """)  
+                t.first_name,
+                t.last_name,
+                count(*) FILTER (WHERE a.status = 'no-show') AS overall_no_shows,
+                count(*) FILTER (WHERE a.status IN ('completed', 'no-show')) AS overall_completed_and_no_shows,
+                round(
+                    count(*) FILTER (WHERE a.status = 'no-show') * 100.0
+                        / NULLIF(count(*) FILTER (WHERE a.status IN ('completed', 'no-show')), 0),
+                    1
+                ) AS overall_no_show_rate_pct,
+                count(*) FILTER (WHERE a.status = 'no-show' AND a.start_date BETWEEN DATE '{as_of}' - INTERVAL 6 DAY AND DATE '{as_of}') AS last_week_no_shows,
+                count(*) FILTER (WHERE a.status IN ('completed', 'no-show') AND a.start_date BETWEEN DATE '{as_of}' - INTERVAL 6 DAY AND DATE '{as_of}') AS last_week_completed_and_no_shows,
+                round(
+                    count(*) FILTER (WHERE a.status = 'no-show' AND a.start_date BETWEEN DATE '{as_of}' - INTERVAL 6 DAY AND DATE '{as_of}') * 100.0
+                        / NULLIF(count(*) FILTER (WHERE a.status IN ('completed', 'no-show') AND a.start_date BETWEEN DATE '{as_of}' - INTERVAL 6 DAY AND DATE '{as_of}'), 0),
+                    1
+                ) AS last_week_no_show_rate_pct
+            FROM therapists t
+            JOIN appointments a ON a.therapist_id = t.therapist_id
+            GROUP BY t.therapist_id, t.first_name, t.last_name
+    """)
 
         _data = mo.notebook_dir() / "data"
         _con.execute(f"COPY therapists FROM '{_data / 'therapists.csv'}' (HEADER)")
@@ -437,14 +436,8 @@ def _(mo):
 def _(ask):
     #Table showing no-show rate for each therapist both overall and in the last 7 days. Both rates are calculated within using "Create View" in the code section where the database is generated. 
     ask("""
-        SELECT
-            t.first_name,
-            t.last_name,
-            round(v.no_show_rate * 100, 1) AS overall_no_show_rate_pct,
-            round(w.no_show_rate * 100, 1) AS last_week_no_show_rate_pct
-        FROM therapists t
-        JOIN no_show_rate_by_therapist v ON t.therapist_id = v.therapist_id
-        LEFT JOIN no_show_rate_last_week_by_therapist w ON t.therapist_id = w.therapist_id
+        SELECT *
+        FROM no_show_rate_by_therapist
         ORDER BY last_week_no_show_rate_pct DESC
     """)
     return
