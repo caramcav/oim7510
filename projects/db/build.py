@@ -16,7 +16,8 @@ def _():
     import duckdb
     import polars as pl
 
-    return (duckdb,)
+
+    return duckdb, pl
 
 
 @app.cell(hide_code=True)
@@ -163,7 +164,7 @@ def _(mo):
     mo.md(r"""
     `make_data.py` writes the CSV files loaded above, with a fixed random seed (`42`) so it writes the same files every time.
 
-    **The two rows that break a rule on purpose** (for business question 7, *"treatments given at an appointment take no more minutes than its length"*): two `appointment_treatments` rows, picked at random each run of `make_data.py` and printed to the terminal when it runs, carry a `minutes_spent` that pushes the total over their appointment's `length`. Our tables do not refuse these rows, because minutes-vs-length is a rule across two tables, not a single-column `CHECK` — so these two rows load successfully and business question 7 has to find them with a query instead.
+    **The two rows that break a rule on purpose** (for business question 7, *"treatments given at an appointment take no more minutes than its length"*): two `appointment_treatments` rows, picked at random each run of `make_data.py` and printed to the terminal when it runs, carry a `minutes_spent` that pushes the total over their appointment's `length`. My tables do not refuse these rows, because minutes-vs-length is a rule across two tables, not a single-column `CHECK` — so these two rows load successfully and business question 7 has to find them with a query instead.
     """)
     return
 
@@ -244,6 +245,56 @@ def _(mo):
     mo.md(r"""
     Read one of your CSV files with polars and chart one column whose shape you can judge, such as appointments by day of the week, orders by hour, or one asset's closing prices. Write one sentence on whether a real business would look like that, and if it would not, what you changed in make_data.py.
     """)
+    return
+
+
+@app.cell
+def _(mo, pl):
+    #reads appointments.csv file and adds it to appointments_df dataframe and converts any date-like columns into real dates
+    appointments_df = pl.read_csv(
+        mo.notebook_dir()/"data"/"appointments.csv",
+        try_parse_dates=True,
+    )
+
+    #create new dataframe showing days of week. %A chooses specifically full weekday name. 
+    appointments_df = appointments_df.with_columns(
+        pl.col("start_date").dt.strftime("%A").alias("day_of_week")
+    )
+    return (appointments_df,)
+
+
+@app.cell
+def _(appointments_df, mo, pl):
+    #Specifies day order 
+    day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+    #Groups appintments by dates of week
+    day_counts = appointments_df.group_by("day_of_week").agg(pl.len().alias("n"))
+
+    #Orders days of week based on day_order listing. 
+    day_counts = day_counts.with_columns(
+        pl.col("day_of_week").cast(pl.Enum(day_order))
+    ).sort("day_of_week")
+
+
+    #Bar chart that shows number of appointments per day of week
+    chart = day_counts.plot.bar(x="day_of_week", y="n")
+
+    mo.md("**Appointments by Day of Week**")
+    chart
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    A real business most likely would not have a similar number of appointments on every day, since it's more likely to be closed or have fewer apppointments on the weekend (Saturday and Sunday). This could be fixed in make_data.py by taking into account days of the week during random generation and not allowing Saturday and Sunday dates to be chosen.
+    """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
