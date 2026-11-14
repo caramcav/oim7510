@@ -264,7 +264,7 @@ def _(mo, pl):
 
 
 @app.cell
-def _(appointments_df, mo, pl):
+def _(appointments_df, pl):
     #Specifies day order 
     day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
@@ -280,7 +280,6 @@ def _(appointments_df, mo, pl):
     #Bar chart that shows number of appointments per day of week
     chart = day_counts.plot.bar(x="day_of_week", y="n")
 
-    mo.md("**Appointments by Day of Week**")
     chart
     return
 
@@ -305,6 +304,36 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ## 4. Row Counts
+
+    Every table with its number of rows.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Every table with its number of rows.
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #wrote SQL query that counts number of rows for each table. 
+
+    ask("""
+        SELECT 'therapists' AS table_name, count(*) AS n_rows FROM therapists
+        UNION ALL
+        SELECT 'patients', count(*) FROM patients
+        UNION ALL
+        SELECT 'treatments', count(*) FROM treatments
+        UNION ALL
+        SELECT 'referrals', count(*) FROM referrals
+        UNION ALL
+        SELECT 'appointments', count(*) FROM appointments
+        UNION ALL
+        SELECT 'appointment_treatments', count(*) FROM appointment_treatments
     """)
     return
 
@@ -313,15 +342,22 @@ def _(mo):
 def _(mo):
     mo.md(r"""
     ## 5. A Row It Refuses
+
+    A Row It Refuses. Insert one row that breaks one of your rules, and show the message the database gives back. ask() only reads, so open a short write connection of its own for the insert, with duckdb.connect(database) as _con:, the way notebook 6 does, and put it inside try and except, so that the rest of the notebook still runs.
     """)
     return
 
 
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    The insert above tries a treatment priced at `$0.00`, which breaks the rule "a price charged is more than zero." The `CHECK (price > 0)` constraint on `treatments` refuses it, and the error message above shows that refusal.
-    """)
+@app.cell
+def _(database, duckdb):
+    with duckdb.connect(database) as _con:
+        try:
+            _con.execute("""
+                INSERT INTO therapists (therapist_id, first_name, last_name, cred, email, hire_date)
+                VALUES (999, 'Test', 'Therapist', 'MD', 'test.therapist@example.com', '2026-01-01')
+            """)
+        except duckdb.ConstraintException as _error:
+            print(_error)
     return
 
 
