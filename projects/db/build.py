@@ -293,8 +293,11 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I updated make_data.py file to include this constraint of no appointments on weekends. The bar chart reflects this update to have no weekend appointments.
+    """)
     return
 
 

@@ -198,6 +198,10 @@ def make_appointments(referred_no_appt_ids):
         therapist_id = random.randint(1, N_THERAPISTS)
         offset_days = random.randint(0, total_days)
         start_date = HISTORY_START + timedelta(days=offset_days)
+
+        if start_date.weekday() in (5, 6):
+            continue
+
         start_minute = random.choice(SLOT_MINUTES)
         length = random.choice(LENGTHS)
         end_minute = start_minute + length
