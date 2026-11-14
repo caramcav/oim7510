@@ -61,7 +61,7 @@ def _(mo):
 
 
 @app.cell
-def _(database, duckdb, mo):
+def _(as_of, database, duckdb, mo):
     #existing database is deleted if needed prior to generating new database. 
     if database.exists():
         database.unlink()
@@ -127,15 +127,6 @@ def _(database, duckdb, mo):
                 PRIMARY KEY (appt_id, treatment_id)
             )
         """)
-
-        _data = mo.notebook_dir() / "data"
-        _con.execute(f"COPY therapists FROM '{_data / 'therapists.csv'}' (HEADER)")
-        _con.execute(f"COPY patients FROM '{_data / 'patients.csv'}' (HEADER)")
-        _con.execute(f"COPY treatments FROM '{_data / 'treatments.csv'}' (HEADER)")
-        _con.execute(f"COPY referrals FROM '{_data / 'referrals.csv'}' (HEADER)")
-        _con.execute(f"COPY appointments FROM '{_data / 'appointments.csv'}' (HEADER)")
-        _con.execute(f"COPY appointment_treatments FROM '{_data / 'appointment_treatments.csv'}' (HEADER)")
-
         _con.execute("""
             CREATE VIEW no_show_rate_by_therapist AS
                 SELECT
@@ -148,6 +139,26 @@ def _(database, duckdb, mo):
                 GROUP BY therapist_id
         """)
 
+        _con.execute(f"""
+        CREATE VIEW no_show_rate_last_week_by_therapist AS
+            SELECT
+                therapist_id,
+                count(*) FILTER (WHERE status = 'no-show') AS no_shows,
+                count(*) FILTER (WHERE status IN ('completed', 'no-show')) AS completed_and_no_shows,
+                count(*) FILTER (WHERE status = 'no-show') * 1.0
+                    / NULLIF(count(*) FILTER (WHERE status IN ('completed', 'no-show')), 0) AS no_show_rate
+            FROM appointments
+            WHERE start_date BETWEEN DATE '{as_of}' - INTERVAL 6 DAY AND DATE '{as_of}'
+            GROUP BY therapist_id
+    """)  
+
+        _data = mo.notebook_dir() / "data"
+        _con.execute(f"COPY therapists FROM '{_data / 'therapists.csv'}' (HEADER)")
+        _con.execute(f"COPY patients FROM '{_data / 'patients.csv'}' (HEADER)")
+        _con.execute(f"COPY treatments FROM '{_data / 'treatments.csv'}' (HEADER)")
+        _con.execute(f"COPY referrals FROM '{_data / 'referrals.csv'}' (HEADER)")
+        _con.execute(f"COPY appointments FROM '{_data / 'appointments.csv'}' (HEADER)")
+        _con.execute(f"COPY appointment_treatments FROM '{_data / 'appointment_treatments.csv'}' (HEADER)")
     return
 
 
@@ -408,6 +419,8 @@ def _(ask):
 def _(mo):
     mo.md(r"""
     ## 7. A View
+
+    One question the business would ask every week, saved with CREATE VIEW in the cell that builds the database, so that anybody can ask for it by name and always get the current rows. Notebook 6 covers views in section 5, after GROUP BY. At least one of your answers in Part B must use it. Chapter D of the SQL handbook, §28.
     """)
     return
 
@@ -415,7 +428,24 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    `no_show_rate_by_therapist`, created above alongside the tables, answers the question a manager would ask every week: how often does each therapist's patients not show up? It stays current because it is a view, not a saved table — every `ask` against it re-reads the latest `appointments` rows.
+    The view I created was a No Show Rate by therapist, which displays the rate both across the entire timeframe of appointments shown in the database and by the past 7 days. The data is originally grouped by therapist ID within the CREATE VIEW code. The data outputted by that Create View is joined with the therapist table so the therapist names can be displayed instead of the therapist ID numbers.
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #Table showing no-show rate for each therapist both overall and in the last 7 days. Both rates are calculated within using "Create View" in the code section where the database is generated. 
+    ask("""
+        SELECT
+            t.first_name,
+            t.last_name,
+            round(v.no_show_rate * 100, 1) AS overall_no_show_rate_pct,
+            round(w.no_show_rate * 100, 1) AS last_week_no_show_rate_pct
+        FROM therapists t
+        JOIN no_show_rate_by_therapist v ON t.therapist_id = v.therapist_id
+        LEFT JOIN no_show_rate_last_week_by_therapist w ON t.therapist_id = w.therapist_id
+        ORDER BY last_week_no_show_rate_pct DESC
     """)
     return
 
