@@ -16,7 +16,7 @@ def _():
     import duckdb
     import polars as pl
 
-    return duckdb, pl
+    return (duckdb,)
 
 
 @app.cell(hide_code=True)
@@ -39,10 +39,13 @@ def _(mo):
 
 @app.cell
 def _(duckdb, mo):
-    _file = mo.notebook_dir() / "database.duckdb"
-    _file.unlink(missing_ok=True)
+    database = mo.notebook_dir() / "database.duckdb"
 
-    with duckdb.connect(_file) as _con:
+    def ask(sql):
+        with duckdb.connect(database, read_only=True) as _con:
+            return _con.sql(sql).pl()
+
+    with duckdb.connect(database) as _con:
         _con.execute("""
             CREATE TABLE therapists (
                 therapist_id INTEGER PRIMARY KEY,
@@ -143,7 +146,7 @@ def _(database, duckdb):
         with duckdb.connect(database, read_only=True) as _con:
             return _con.sql(sql).pl()
 
-    return (ask,)
+    return
 
 
 @app.cell(hide_code=True)
@@ -172,20 +175,6 @@ def _(mo):
     return
 
 
-@app.cell
-def _(mo, pl):
-    _appointments = pl.read_csv(mo.notebook_dir() / "data" / "appointments.csv", try_parse_dates=True)
-    _by_weekday = (
-        _appointments
-        .with_columns(pl.col("start_date").dt.strftime("%A").alias("weekday"))
-        .group_by("weekday")
-        .len()
-        .sort("len", descending=True)
-    )
-    _by_weekday
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -202,45 +191,11 @@ def _(mo):
     return
 
 
-@app.cell
-def _(ask):
-    ask("""
-        SELECT 'therapists' AS table_name, count(*) AS rows FROM therapists
-        UNION ALL
-        SELECT 'patients', count(*) FROM patients
-        UNION ALL
-        SELECT 'treatments', count(*) FROM treatments
-        UNION ALL
-        SELECT 'referrals', count(*) FROM referrals
-        UNION ALL
-        SELECT 'appointments', count(*) FROM appointments
-        UNION ALL
-        SELECT 'appointment_treatments', count(*) FROM appointment_treatments
-    """)
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## 5. A Row It Refuses
     """)
-    return
-
-
-@app.cell
-def _(database, duckdb):
-    try:
-        with duckdb.connect(database) as _con:
-            _con.execute("""
-                INSERT INTO treatments (treatment_id, treatment_name, std_min, price, int_cost)
-                VALUES (999, 'Free Sample Session', 30, 0.00, 5.00)
-            """)
-        refusal_message = "the database accepted the row"
-    except Exception as _e:
-        refusal_message = str(_e)
-
-    refusal_message
     return
 
 
@@ -260,33 +215,6 @@ def _(mo):
     return
 
 
-@app.cell
-def _(ask):
-    # expected: 6, since make_data.py generates exactly 6 therapists
-    ask("SELECT count(*) AS therapist_count FROM therapists")
-    return
-
-
-@app.cell
-def _(ask):
-    # expected: 0, since make_data.py never gives a treatment a price <= 0 or a negative cost
-    ask("SELECT count(*) AS bad_rows FROM treatments WHERE price <= 0 OR int_cost < 0")
-    return
-
-
-@app.cell
-def _(ask):
-    # expected: 15, since make_data.py sets aside exactly 15 referred patients with no appointment
-    ask("""
-        SELECT count(*) AS referred_with_no_appointment
-        FROM referrals r
-        WHERE NOT EXISTS (
-            SELECT 1 FROM appointments a WHERE a.patient_id = r.patient_id
-        )
-    """)
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -300,12 +228,6 @@ def _(mo):
     mo.md(r"""
     `no_show_rate_by_therapist`, created above alongside the tables, answers the question a manager would ask every week: how often does each therapist's patients not show up? It stays current because it is a view, not a saved table — every `ask` against it re-reads the latest `appointments` rows.
     """)
-    return
-
-
-@app.cell
-def _(ask):
-    ask("SELECT * FROM no_show_rate_by_therapist ORDER BY no_show_rate DESC")
     return
 
 
