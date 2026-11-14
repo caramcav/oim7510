@@ -31,12 +31,12 @@ def _(mo):
 
 @app.cell
 def _():
+    #This section of code defines as_of date. as_of date will always be October 31, 2026, regardless of when the notebook is run. The same as_of date is included in make_data.py file. 
+
     import datetime
 
     as_of = datetime.date(2026, 10, 31)
     as_of
-
-    #as_of date will always be October 31, 2026, regardless of when the notebook is run. 
     return as_of, datetime
 
 
@@ -61,6 +61,7 @@ def _(mo):
 
 @app.cell
 def _(database, duckdb, mo):
+    #existing database is deleted if needed prior to generating new database. 
     if database.exists():
         database.unlink()
 
@@ -146,19 +147,23 @@ def _(database, duckdb, mo):
                 GROUP BY therapist_id
         """)
 
-
-
-
     return
 
 
-@app.cell
-def _(as_of, ask):
-    ask(f"""
-        SELECT count(*) AS violations
-        FROM appointments
-        WHERE (start_date <= DATE '{as_of}' AND status = 'booked')
-           OR (start_date > DATE '{as_of}' AND status IN ('completed', 'no-show'))
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 2. The Data
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    `make_data.py` writes the CSV files loaded above, with a fixed random seed (`42`) so it writes the same files every time.
+
+    **The two rows that break a rule on purpose** (for business question 7, *"treatments given at an appointment take no more minutes than its length"*): two `appointment_treatments` rows, picked at random each run of `make_data.py` and printed to the terminal when it runs, carry a `minutes_spent` that pushes the total over their appointment's `length`. Our tables do not refuse these rows, because minutes-vs-length is a rule across two tables, not a single-column `CHECK` — so these two rows load successfully and business question 7 has to find them with a query instead.
     """)
     return
 
@@ -174,6 +179,21 @@ def _(datetime, mo):
 
 @app.cell
 def _(as_of, ask):
+    #Code to confirm that as_of date used in make_data file is consistent with the as_of date in this file
+
+    ask(f"""
+        SELECT count(*) AS violations
+        FROM appointments
+        WHERE (start_date <= DATE '{as_of}' AND status = 'booked')
+           OR (start_date > DATE '{as_of}' AND status IN ('completed', 'no-show'))
+    """)
+    return
+
+
+@app.cell
+def _(as_of, ask):
+    #shows number of appointments with different statuses to show that all booked meetings are in the future and appointments in past have either completed or no-show status. 
+
     ask(f"""
         SELECT
             CASE WHEN start_date <= DATE '{as_of}' THEN 'on or before as_of' ELSE 'after as_of' END AS period,
@@ -214,24 +234,6 @@ def _(ask):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 2. The Data
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    `make_data.py` writes the CSV files loaded above, with a fixed random seed (`42`) so it writes the same files every time.
-
-    **The two rows that break a rule on purpose** (for business question 7, *"treatments given at an appointment take no more minutes than its length"*): two `appointment_treatments` rows, picked at random each run of `make_data.py` and printed to the terminal when it runs, carry a `minutes_spent` that pushes the total over their appointment's `length`. Our tables do not refuse these rows, because minutes-vs-length is a rule across two tables, not a single-column `CHECK` — so these two rows load successfully and business question 7 has to find them with a query instead.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
     ## 3. A Look at the Data
     """)
     return
@@ -240,7 +242,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    Appointments spread roughly evenly across weekdays, since `make_data.py` picks a day at random with no weekday weighting — a real clinic would likely book fewer appointments on weekends. If this mattered for the business questions, `make_data.py` could draw `start_date` only from Monday–Friday.
+    Read one of your CSV files with polars and chart one column whose shape you can judge, such as appointments by day of the week, orders by hour, or one asset's closing prices. Write one sentence on whether a real business would look like that, and if it would not, what you changed in make_data.py.
     """)
     return
 
