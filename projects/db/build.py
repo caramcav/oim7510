@@ -29,12 +29,15 @@ def _(mo):
     return
 
 
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ## 1. The Tables
-    """)
-    return
+@app.cell
+def _():
+    import datetime
+
+    as_of = datetime.date(2026, 10, 31)
+    as_of
+
+    #as_of date will always be October 31, 2026, regardless of when the notebook is run. 
+    return (as_of,)
 
 
 @app.cell
@@ -44,6 +47,22 @@ def _(duckdb, mo):
     def ask(sql):
         with duckdb.connect(database, read_only=True) as _con:
             return _con.sql(sql).pl()
+
+    return ask, database
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## 1. The Tables
+    """)
+    return
+
+
+@app.cell
+def _(database, duckdb, mo):
+    if database.exists():
+        database.unlink()
 
     with duckdb.connect(database) as _con:
         _con.execute("""
@@ -127,25 +146,34 @@ def _(duckdb, mo):
                 GROUP BY therapist_id
         """)
 
-    database = _file
-    database.name
-    return (database,)
 
 
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    **Every other cell asks through `ask`.** It opens the file only to read, runs one query, hands back the result as a table, and closes the file again.
+
+    return
+
+
+@app.cell
+def _(as_of, ask):
+    ask(f"""
+        SELECT count(*) AS violations
+        FROM appointments
+        WHERE (start_date <= DATE '{as_of}' AND status = 'booked')
+           OR (start_date > DATE '{as_of}' AND status IN ('completed', 'no-show'))
     """)
     return
 
 
 @app.cell
-def _(database, duckdb):
-    def ask(sql):
-        with duckdb.connect(database, read_only=True) as _con:
-            return _con.sql(sql).pl()
-
+def _(as_of, ask):
+    ask(f"""
+        SELECT
+            CASE WHEN start_date <= DATE '{as_of}' THEN 'on or before as_of' ELSE 'after as_of' END AS period,
+            status,
+            count(*) AS n
+        FROM appointments
+        GROUP BY period, status
+        ORDER BY period, status
+    """)
     return
 
 
