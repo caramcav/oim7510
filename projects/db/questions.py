@@ -48,6 +48,12 @@ def _():
 
 
 @app.cell
+def _(last_month_end):
+    last_month_end
+    return
+
+
+@app.cell
 def _(ask):
     #Adding descriptions of tables to assist in questions 
     ask("SHOW TABLES")
@@ -73,7 +79,14 @@ def _(ask):
 
 
 @app.cell
-def _():
+def _(ask):
+    ask("SELECT DISTINCT status FROM appointments")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE no_show_rate_by_therapist")
     return
 
 
@@ -86,7 +99,7 @@ def _(mo):
 
 
 @app.cell
-def _(ask, last_month_end, last_month_start):
+def _(ask, last_month_end, last_month_start, mo):
     therapist_revenue = ask(f"""
     WITH appt_revenue AS (
         SELECT appt_id, SUM(price_charged) AS revenue
@@ -109,7 +122,10 @@ def _(ask, last_month_end, last_month_start):
     ORDER BY t.therapist_id
     """)
 
-    therapist_revenue
+    mo.vstack([
+        mo.md(f"### Results for {last_month_start.strftime('%B %Y')}"),
+        therapist_revenue
+    ])
 
     return (therapist_revenue,)
 
@@ -118,11 +134,6 @@ def _(ask, last_month_end, last_month_start):
 def _(therapist_revenue):
     therapist_revenue_total = therapist_revenue["total_revenue"].sum()
     therapist_revenue_total
-    return
-
-
-@app.cell
-def _():
     return
 
 
@@ -136,7 +147,7 @@ def _(ask, last_month_end, last_month_start):
     JOIN appointment_treatments att ON a.appt_id = att.appt_id
     WHERE a.status = 'completed'
       AND a.start_date >= DATE '{last_month_start}'
-      AND a.start_date <= DATE '{last_month_end}'
+      AND a.start_date < DATE '{last_month_end}'
     """)
     return
 
@@ -146,6 +157,62 @@ def _(mo):
     mo.md(r"""
     ## 2. The no-show rate for each therapist and for each day of the week
     """)
+    return
+
+
+@app.cell
+def _(ask, mo):
+    therapist_no_show = ask("""
+        SELECT first_name, last_name, overall_no_shows, overall_completed_and_no_shows, overall_no_show_rate_pct
+        FROM no_show_rate_by_therapist
+        ORDER BY overall_no_show_rate_pct DESC
+    """)
+
+    mo.vstack([
+        mo.md(f"### No show rate for each therapist, overall and in last week"),
+        therapist_no_show
+    ])
+    return (therapist_no_show,)
+
+
+@app.cell
+def _(ask, mo):
+    day_of_week_no_show = ask("""
+        SELECT
+            strftime(start_date, '%A') AS day_of_week,
+            dayofweek(start_date) AS day_num,
+            COUNT(*) FILTER (WHERE status = 'no-show') AS no_shows,
+            COUNT(*) FILTER (WHERE status IN ('no-show', 'completed')) AS completed_and_no_shows,
+            ROUND(
+                100.0 * COUNT(*) FILTER (WHERE status = 'no-show')
+                / NULLIF(COUNT(*) FILTER (WHERE status IN ('no-show', 'completed')), 0),
+                2
+            ) AS no_show_rate_pct
+        FROM appointments
+        GROUP BY day_of_week, day_num
+        ORDER BY day_num
+    """)
+
+    mo.vstack([
+        mo.md(f"### No show rate for each day"),
+        day_of_week_no_show
+    ])
+    return (day_of_week_no_show,)
+
+
+@app.cell
+def _(day_of_week_no_show, therapist_no_show):
+    #Checking that overall no show rate within therapists and adding together no show rate for each day generates same overall percentage. 
+
+    therapist_no_shows_sum = therapist_no_show["overall_no_shows"].sum()
+    therapist_completed_and_no_shows_sum = therapist_no_show["overall_completed_and_no_shows"].sum()
+    therapist_overall_rate = round(100 * therapist_no_shows_sum / therapist_completed_and_no_shows_sum, 2)
+
+    day_no_shows_sum = day_of_week_no_show["no_shows"].sum()
+    day_completed_and_no_shows_sum = day_of_week_no_show["completed_and_no_shows"].sum()
+    day_overall_rate = round(100 * day_no_shows_sum / day_completed_and_no_shows_sum, 2)
+
+    therapist_overall_rate, day_overall_rate, therapist_overall_rate == day_overall_rate
     return
 
 
