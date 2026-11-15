@@ -333,6 +333,20 @@ def _(mo):
 
 
 @app.cell
+def _(ask):
+    patients_referred_no_appt = ask("""
+        SELECT DISTINCT p.patient_id, p.first_name, p.last_name
+        FROM patients p
+        JOIN referrals r ON p.patient_id = r.patient_id
+        LEFT JOIN appointments a ON p.patient_id = a.patient_id
+        WHERE a.patient_id IS NULL
+    """)
+
+    patients_referred_no_appt
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     ## 6. One row per patient with their number of referrals and their number of appointments, each checked against counting it on its own
