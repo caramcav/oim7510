@@ -44,7 +44,7 @@ def _():
         last_month_start = last_month_end.replace(month=last_month_end.month - 1)
 
     as_of
-    return last_month_end, last_month_start
+    return as_of, last_month_end, last_month_start
 
 
 @app.cell
@@ -87,6 +87,24 @@ def _(ask):
 @app.cell
 def _(ask):
     ask("DESCRIBE no_show_rate_by_therapist")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE patients")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE treatments")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE referrals")
     return
 
 
@@ -225,10 +243,84 @@ def _(mo):
 
 
 @app.cell
+def _(as_of, ask):
+    #Assumption: I included patients on this list who have never booked an appointment
+
+    patients_90_days = ask(f"""
+    --Finds the most recently completed appointment for each patient and adds them to a table
+    WITH last_completed AS (
+        SELECT
+            patient_id,
+            MAX(start_date) AS last_completed_date
+        FROM appointments
+        WHERE status = 'completed'
+        GROUP BY patient_id
+    ),
+    --Disregard any patients who have booked appointments 
+    has_booked AS (
+        SELECT DISTINCT patient_id
+        FROM appointments
+        WHERE status = 'booked'
+    )
+    SELECT
+        p.patient_id,
+        p.first_name,
+        p.last_name,
+        p.phone,
+        lc.last_completed_date
+    FROM patients p
+    LEFT JOIN last_completed lc ON p.patient_id = lc.patient_id
+    LEFT JOIN has_booked hb ON p.patient_id = hb.patient_id
+    WHERE (lc.last_completed_date < DATE '{as_of}' - INTERVAL 90 DAY
+           OR lc.last_completed_date IS NULL)
+      AND hb.patient_id IS NULL
+      AND p.phone <> ''
+    ORDER BY lc.last_completed_date
+    """)
+
+    patients_90_days
+
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     ## 4. Revenue, cost and margin for each treatment, including treatments never given
     """)
+    return
+
+
+@app.cell
+def _(ask):
+    treatment_stats = ask("""
+    WITH completed_treatments AS (
+        SELECT att.treatment_id, att.price_charged
+        FROM appointment_treatments att
+        JOIN appointments a ON att.appt_id = a.appt_id
+        WHERE a.status = 'completed'
+    )
+    SELECT
+        t.treatment_id,
+        t.treatment_name,
+        t.price AS list_price,
+        t.int_cost,
+        COUNT(ct.treatment_id) AS times_given,
+        COALESCE(SUM(ct.price_charged), 0) AS total_revenue,
+        COUNT(ct.treatment_id) * t.int_cost AS total_cost,
+        COALESCE(SUM(ct.price_charged), 0) - COUNT(ct.treatment_id) * t.int_cost AS total_margin,
+        ROUND(
+            (COALESCE(SUM(ct.price_charged), 0) - COUNT(ct.treatment_id) * t.int_cost)
+            / NULLIF(COUNT(ct.treatment_id), 0),
+            2
+        ) AS margin_per_treatment
+    FROM treatments t
+    LEFT JOIN completed_treatments ct ON t.treatment_id = ct.treatment_id
+    GROUP BY t.treatment_id, t.treatment_name, t.price, t.int_cost
+    ORDER BY total_margin DESC
+    """)
+
+    treatment_stats
     return
 
 
