@@ -469,6 +469,80 @@ def _(mo):
 
 
 @app.cell
+def _(ask):
+    completed_treatments_rule_break = ask("""
+    WITH treatment_minutes AS (
+        SELECT appt_id, SUM(minutes_spent) AS total_minutes
+        FROM appointment_treatments
+        GROUP BY appt_id
+    )
+    SELECT
+        a.appt_id,
+        a.patient_id,
+        a.therapist_id,
+        a.length AS appt_length,
+        tm.total_minutes,
+        tm.total_minutes - a.length AS minutes_over
+    FROM appointments a
+    JOIN treatment_minutes tm ON a.appt_id = tm.appt_id
+    WHERE a.status = 'completed'
+      AND tm.total_minutes > a.length
+    ORDER BY minutes_over DESC
+    """)
+
+    completed_treatments_rule_break
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    The appt_ids that break the rules match with those that were identified from the terminal code when the data was first generated: "rows that break the minutes-vs-length rule on purpose: appt_id 2285, appt_id 2894"
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""
+    ## 8. Which therapist earns the most revenue per hour of scheduled appointment time?
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    therapist_revenue_per_hour = ask("""
+    WITH appt_revenue AS (
+        SELECT appt_id, SUM(price_charged) AS revenue
+        FROM appointment_treatments
+        GROUP BY appt_id
+    )
+    SELECT
+        t.therapist_id,
+        t.first_name,
+        t.last_name,
+        COUNT(a.appt_id) AS completed_appointments,
+        SUM(a.length) AS total_minutes,
+        ROUND(SUM(a.length) / 60.0, 2) AS total_hours,
+        COALESCE(SUM(ar.revenue), 0) AS total_revenue,
+        ROUND(
+            COALESCE(SUM(ar.revenue), 0) / (SUM(a.length) / 60.0),
+            2
+        ) AS revenue_per_hour
+    FROM appointments a
+    JOIN therapists t ON a.therapist_id = t.therapist_id
+    LEFT JOIN appt_revenue ar ON a.appt_id = ar.appt_id
+    WHERE a.status = 'completed'
+    GROUP BY t.therapist_id, t.first_name, t.last_name
+    ORDER BY revenue_per_hour DESC
+    """)
+
+    therapist_revenue_per_hour
+    return
+
+
+@app.cell
 def _(mo):
     mo.md(r"""
     # How I Know These Numbers Are Right
