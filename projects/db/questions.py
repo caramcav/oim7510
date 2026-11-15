@@ -21,7 +21,7 @@ def _(duckdb, mo):
         with duckdb.connect(database, read_only=True) as _con:
             return _con.sql(sql).pl()
 
-    return
+    return (ask,)
 
 
 @app.cell
@@ -31,7 +31,49 @@ def _():
     import datetime
 
     as_of = datetime.date(2026, 10, 31)
+
+    # "Last 30 days" = the 30 days ending on as_of (inclusive of as_of itself)
+    last_30_days_end = as_of
+    last_30_days_start = as_of - datetime.timedelta(days=29)
+
+    # "Last month" = the last full calendar month before as_of
+    last_month_end = as_of.replace(day=1)
+    if last_month_end.month == 1:
+        last_month_start = last_month_end.replace(year=last_month_end.year - 1, month=12)
+    else:
+        last_month_start = last_month_end.replace(month=last_month_end.month - 1)
+
     as_of
+    return last_month_end, last_month_start
+
+
+@app.cell
+def _(ask):
+    #Adding descriptions of tables to assist in questions 
+    ask("SHOW TABLES")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE appointments")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE appointment_treatments")
+    return
+
+
+@app.cell
+def _(ask):
+    ask("DESCRIBE therapists")
+    return
+
+
+@app.cell
+def _():
     return
 
 
@@ -39,6 +81,62 @@ def _():
 def _(mo):
     mo.md(r"""
     ## 1. Each therapist's completed appointments last month, and the revenue from them
+    """)
+    return
+
+
+@app.cell
+def _(ask, last_month_end, last_month_start):
+    therapist_revenue = ask(f"""
+    WITH appt_revenue AS (
+        SELECT appt_id, SUM(price_charged) AS revenue
+        FROM appointment_treatments
+        GROUP BY appt_id
+    )
+    SELECT
+        t.therapist_id,
+        t.first_name,
+        t.last_name,
+        COUNT(a.appt_id) AS completed_appointments,
+        COALESCE(SUM(ar.revenue), 0) AS total_revenue
+    FROM appointments a
+    JOIN therapists t ON a.therapist_id = t.therapist_id
+    LEFT JOIN appt_revenue ar ON a.appt_id = ar.appt_id
+    WHERE a.status = 'completed'
+      AND a.start_date >= DATE '{last_month_start}'
+      AND a.start_date <  DATE '{last_month_end}'
+    GROUP BY t.therapist_id, t.first_name, t.last_name
+    ORDER BY t.therapist_id
+    """)
+
+    therapist_revenue
+
+    return (therapist_revenue,)
+
+
+@app.cell
+def _(therapist_revenue):
+    therapist_revenue_total = therapist_revenue["total_revenue"].sum()
+    therapist_revenue_total
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _(ask, last_month_end, last_month_start):
+    #Check total revenue for all appointments 
+    ask(f"""
+    SELECT
+        SUM(att.price_charged) AS total_revenue_last_30_days
+    FROM appointments a
+    JOIN appointment_treatments att ON a.appt_id = att.appt_id
+    WHERE a.status = 'completed'
+      AND a.start_date >= DATE '{last_month_start}'
+      AND a.start_date <= DATE '{last_month_end}'
     """)
     return
 
@@ -120,6 +218,14 @@ def _(mo):
     ## 2. Working With the Agent
 
     Pick one piece of AI output you did not accept as-is. What did it give you, what did you change, and how did you know? Point to the commit or the cell. If the agent got it right the first time: What did you do to verify that?
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    For question 1, I added a check to confirm that the revenue per therapist calculated in my first table is the same as the total revenue calculated from adding the price_charged for all appointments within the date range together. Those numbers did not match, so I dug into the code and saw that the date criteria was different within the two queries.
     """)
     return
 
