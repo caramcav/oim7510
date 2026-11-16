@@ -36,7 +36,7 @@ def _():
     last_30_days_end = as_of
     last_30_days_start = as_of - datetime.timedelta(days=29)
 
-    # "Last month" = the last full calendar month before as_of
+    # "Last month" = the last full calendar month before as_of. With an "As of" of October 31, the last full calendar month is September. 
     last_month_end = as_of.replace(day=1)
     if last_month_end.month == 1:
         last_month_start = last_month_end.replace(year=last_month_end.year - 1, month=12)
@@ -48,70 +48,9 @@ def _():
 
 
 @app.cell
-def _(last_month_end):
-    last_month_end
-    return
-
-
-@app.cell
-def _(ask):
-    #Adding descriptions of tables to assist in questions 
-    ask("SHOW TABLES")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE appointments")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE appointment_treatments")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE therapists")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("SELECT DISTINCT status FROM appointments")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE no_show_rate_by_therapist")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE patients")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE treatments")
-    return
-
-
-@app.cell
-def _(ask):
-    ask("DESCRIBE referrals")
-    return
-
-
-@app.cell
 def _(mo):
     mo.md(r"""
-    ## 1. Each therapist's completed appointments last month, and the revenue from them
+    ## 1. How many appointments did each therapist complete in the last full calendar month, and how much money did they each earn from those completed appointments?
     """)
     return
 
@@ -170,10 +109,18 @@ def _(ask, last_month_end, last_month_start):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: In September 2026 the six therapists each completed between 30 and 40 appointments, earning between $2,365 (Angel Hill) and $3,485 (Christopher Henderson), for $17,385 in clinic-wide completed-appointment revenue.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## 2. The no-show rate for each therapist and for each day of the week
+    ## 2. What percentage of appointments scheduled in the past did patients not attend, broken down by therapist and day of the week?
     """)
     return
 
@@ -181,13 +128,13 @@ def _(mo):
 @app.cell
 def _(ask, mo):
     therapist_no_show = ask("""
-        SELECT first_name, last_name, overall_no_shows, overall_completed_and_no_shows, overall_no_show_rate_pct
+        SELECT first_name, last_name, overall_no_shows,overall_completed_and_no_shows,overall_no_show_rate_pct
         FROM no_show_rate_by_therapist
         ORDER BY overall_no_show_rate_pct DESC
     """)
 
     mo.vstack([
-        mo.md(f"### No show rate for each therapist, overall and in last week"),
+        mo.md(f"### Overall no show rate for each therapist"),
         therapist_no_show
     ])
     return (therapist_no_show,)
@@ -234,10 +181,18 @@ def _(day_of_week_no_show, therapist_no_show):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: Using the overall no-show rate rather than just last week's, therapists range from 13.0% to 15.9% of appointments missed by their patients, and Friday is the most missed day at 17.43% versus Tuesday's low of 12.57%.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## 3. Patients whose last completed appointment was more than 90 days ago, with nothing booked, with a phone number
+    ## 3. Which existing patients have not completed any appointments in the last 90 days or do not have any appointments booked, and what is their phone number for a follow up call? Include any patients who are in the system but have never booked an appointment.
     """)
     return
 
@@ -283,10 +238,18 @@ def _(as_of, ask):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: There are 47 patients with phone numbers on file who have not completed an appointment within the previous 90 days or have never completed an appointment, and do not currently have an appointment booked.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## 4. Revenue, cost and margin for each treatment, including treatments never given
+    ## 4. For each treatment, including those that have never been given, what does the treatment cost the clinic(if applicable), how much does the clinic charge, and what is the margin (difference between cost and charge) that the clinic makes on each treatment? Also calculate the total revenue, cost and margin to the clinic from all available data.
     """)
     return
 
@@ -305,15 +268,14 @@ def _(ask):
         t.treatment_name,
         t.price AS list_price,
         t.int_cost,
-        COUNT(ct.treatment_id) AS times_given,
-        COALESCE(SUM(ct.price_charged), 0) AS total_revenue,
-        COUNT(ct.treatment_id) * t.int_cost AS total_cost,
-        COALESCE(SUM(ct.price_charged), 0) - COUNT(ct.treatment_id) * t.int_cost AS total_margin,
         ROUND(
             (COALESCE(SUM(ct.price_charged), 0) - COUNT(ct.treatment_id) * t.int_cost)
             / NULLIF(COUNT(ct.treatment_id), 0),
-            2
-        ) AS margin_per_treatment
+            2) AS margin_for_one_treatment,
+        COUNT(ct.treatment_id) AS times_given,
+        COALESCE(SUM(ct.price_charged), 0) AS total_revenue,
+        COUNT(ct.treatment_id) * t.int_cost AS total_cost,
+        COALESCE(SUM(ct.price_charged), 0) - COUNT(ct.treatment_id) * t.int_cost AS total_margin
     FROM treatments t
     LEFT JOIN completed_treatments ct ON t.treatment_id = ct.treatment_id
     GROUP BY t.treatment_id, t.treatment_name, t.price, t.int_cost
@@ -324,10 +286,18 @@ def _(ask):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: The per treatment prices range from \$35 to 90 and the per treatment internal costs range from \$7 to 30, with the highest per treatment margin coming from Post-Surgical Rehab (\$60) and the lowest per treatment margin coming from electrical stimulation (\$28). The clinic has made the most money on Ultrasound therapy with a total margin of \$23,072 over the past year, and has made the least on Post-Surgical Rehab (\$12,420) despite it having the highest per treatment margin.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## 5. Patients who were referred and have no appointment at all
+    ## 5. Which patients have a referral but have not yet booked an appointment, and what is their phone number for a follow-up?
     """)
     return
 
@@ -335,7 +305,7 @@ def _(mo):
 @app.cell
 def _(ask):
     patients_referred_no_appt = ask("""
-        SELECT DISTINCT p.patient_id, p.first_name, p.last_name
+        SELECT DISTINCT p.patient_id, p.first_name, p.last_name, p.phone
         FROM patients p
         JOIN referrals r ON p.patient_id = r.patient_id
         LEFT JOIN appointments a ON p.patient_id = a.patient_id
@@ -346,10 +316,18 @@ def _(ask):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: There are 15 patients who came in through a referral but still have not booked an appointment, and their phone numbers are listed for a follow-up call.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## 6. One row per patient with their number of referrals and their number of appointments, each checked against counting it on its own
+    ## 6. How many referrals and appointments does each patient have, including those who have not booked or been referred at all, and how many patients have no referrals or appointments?
     """)
     return
 
@@ -461,9 +439,29 @@ def _(patient_referrals_appts, patient_referrals_appts_sep_count):
 
 
 @app.cell
+def _(patient_referrals_appts_sep_count):
+    #Count number of patients with zero referrals and appointments. 
+    count = 0
+    for row in patient_referrals_appts_sep_count.iter_rows(named=True):
+        if row["num_referrals"] == 0 and row["num_appointments"] == 0:
+            count += 1
+
+    count
+    return
+
+
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 7. Every completed appointment checked against the rule that the treatments given at it take no more minutes than its length, and a list of any that break it
+    Answer: The 300 patients currently enrolled in the clinic have their total number of referrals and appointments listed in the table above, including 20 patients who have had no referrals or appointments.
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""
+    ## 7. Which appointments break the rule that treatments given at the appointment take no more time than the appointment length?
     """)
     return
 
@@ -502,10 +500,18 @@ def _(mo):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: Two appointments, with appointment IDs 2894 and 2285, break the rule that the treatments given at the appointment take no more time than the appointment length.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
-    ## 8. Which therapist earns the most revenue per hour of scheduled appointment time?
+    ## 8. What is the revenue per hour earned by each therapist?
     """)
     return
 
@@ -542,6 +548,14 @@ def _(ask):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Answer: All physical therapists at the clinic earn a similar amount of revenue per hour, with Jessica Herrera earning the most on average (\$109.21) and James Santos earning the least (\$106.55).
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
@@ -557,6 +571,11 @@ def _(mo):
 
     In this notebook, verify at least two of your answers from Part B a second way: a total against the sum of its parts, a count against counting the same rows another way, or a number against the row counts and the data you generated in Part A.
     """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
