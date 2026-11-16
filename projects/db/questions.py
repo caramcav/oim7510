@@ -283,7 +283,7 @@ def _(ask):
     """)
 
     treatment_stats
-    return
+    return (treatment_stats,)
 
 
 @app.cell(hide_code=True)
@@ -291,6 +291,34 @@ def _(mo):
     mo.md(r"""
     Answer: The per treatment prices range from \$35 to 90 and the per treatment internal costs range from \$7 to 30, with the highest per treatment margin coming from Post-Surgical Rehab (\$60) and the lowest per treatment margin coming from electrical stimulation (\$28). The clinic has made the most money on Ultrasound therapy with a total margin of \$23,072 over the past year, and has made the least on Post-Surgical Rehab (\$12,420) despite it having the highest per treatment margin.
     """)
+    return
+
+
+@app.cell
+def _(treatment_stats):
+    #Bar chart for going further section
+
+    import altair as alt
+
+    revenue_bars = alt.Chart(treatment_stats).mark_bar(opacity=0.7, color="steelblue").encode(
+        x=alt.X("treatment_name:N", title="Treatment", sort="-total_revenue"),
+        y=alt.Y("total_revenue:Q", title="Amount ($)"),
+        tooltip=["treatment_name", "total_revenue"]
+    )
+
+    cost_bars = alt.Chart(treatment_stats).mark_bar(opacity=0.7, color="orange").encode(
+        x=alt.X("treatment_name:N"),
+        y=alt.Y("total_cost:Q"),
+        tooltip=["treatment_name", "total_cost"]
+    )
+
+    treatment_chart = (revenue_bars + cost_bars).properties(
+        title="Total Revenue vs. Total Internal Cost by Treatment (margin = gap between bars)",
+        width=500,
+        height=350
+    )
+
+    treatment_chart
     return
 
 
@@ -495,7 +523,7 @@ def _(ask):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    The appt_ids that break the rules match with those that were identified from the terminal code when the data was first generated: "rows that break the minutes-vs-length rule on purpose: appt_id 2285, appt_id 2894"
+    Answer: The appt_ids that break the rules match with those that were identified from the terminal code when the data was first generated: "rows that break the minutes-vs-length rule on purpose: appt_id 2285, appt_id 2894"
     """)
     return
 
@@ -574,8 +602,13 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I double checked my answer to question 1, which calculated revenue per therapist in the past month, by adding total revenue for the past month and checking to see if the value was the same as adding all of the therapist's revenues together.
+
+    I verified my answer on question 3, which calculated no show rates by therapist and day of week, by adding together the total number of no-shows for each of the breakdowns and dividing those by the total number of completed and no_show appointments. The total rates between those matched, which confirms that I didn't add or duplicate any rows in the process of joining the tables together.
+    """)
     return
 
 
@@ -592,7 +625,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    For question 1, I added a check to confirm that the revenue per therapist calculated in my first table is the same as the total revenue calculated from adding the price_charged for all appointments within the date range together. Those numbers did not match, so I dug into the code and saw that the date criteria was different within the two queries.
+    For question 1, I added a check to confirm that the revenue per therapist calculated in my first table is the same as the total revenue calculated from adding the price_charged for all appointments within the date range together. Those numbers did not match, so I dug into the code and saw that the date criteria was different within the two queries. I saved commit 0abb53b prior to updating the date criteria to match.
     """)
     return
 
@@ -645,12 +678,28 @@ def _(mo):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    I added a bar chart to the end of Question 5 to visualize the total revenue and cost per treatment. After the AI agent generated the code to create the chart, I worked with it to make some updates, including having the bars overlapping instead of next to each other or stacked, so that the margin for each treatment could be visualized.
+    """)
+    return
+
+
 @app.cell
 def _(mo):
     mo.md(r"""
     ## 5. Time Spent
 
     About how many hours the whole project took you outside class, as one number. It is not graded.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    16 hours
     """)
     return
 
