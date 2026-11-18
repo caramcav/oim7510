@@ -548,6 +548,95 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    #Answer for in-class question 
+    #Question: is there any territories that we put too many employees in? Which customer has biggest and smallest average ticket size
+
+    ask(northwind_database, """ 
+    SELECT 'Employees by Region' AS metric, e.Region AS region_value, COUNT(*) AS value
+    FROM employees AS e
+    GROUP BY e.Region
+
+    UNION ALL
+
+    SELECT 'Avg Ticket Size by Region' AS metric, c.Region AS region_value, round(avg(order_totals.revenue), 2) AS value
+    FROM customers AS c
+    JOIN orders AS o ON o.CustomerID = c.CustomerID
+    JOIN (
+        SELECT OrderID, sum(UnitPrice * Quantity * (1 - Discount)) AS revenue
+        FROM order_details
+        GROUP BY OrderID
+    ) AS order_totals ON order_totals.OrderID = o.OrderID
+    GROUP BY c.Region
+
+    ORDER BY metric, value""")
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """ 
+    SELECT c.Region, round(avg(order_totals.revenue), 2) AS average_ticket_size
+    FROM customers AS c
+    JOIN orders AS o ON o.CustomerID = c.CustomerID
+    JOIN (
+        SELECT OrderID, sum(UnitPrice * Quantity * (1 - Discount)) AS revenue
+        FROM order_details
+        GROUP BY OrderID
+    ) AS order_totals ON order_totals.OrderID = o.OrderID
+    GROUP BY c.Region
+    ORDER BY average_ticket_size DESC""")
+
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """
+        SELECT *
+        FROM employees
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """
+        SELECT *
+        FROM customers
+
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """
+        SELECT *
+        FROM territories
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """
+        SELECT *
+        FROM regions
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """
+        SELECT * 
+        FROM employee_territories
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
