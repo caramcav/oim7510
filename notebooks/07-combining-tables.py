@@ -980,6 +980,68 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    #Compilation of all territories and order for each employee
+    employee_orders_territories_freight = ask(northwind_database, """
+        SELECT e.EmployeeID, e.FirstName, e.LastName,
+               coalesce(o.order_count, 0) AS order_count,
+               coalesce(t.territory_count, 0) AS territory_count,
+               coalesce(o.total_freight, 0) AS total_freight
+        FROM employees AS e
+        LEFT JOIN (
+            SELECT EmployeeID, count(*) AS order_count, sum(Freight) AS total_freight
+            FROM orders
+            GROUP BY EmployeeID
+        ) AS o ON o.EmployeeID = e.EmployeeID
+        LEFT JOIN (
+            SELECT EmployeeID, count(*) AS territory_count
+            FROM employee_territories
+            GROUP BY EmployeeID
+        ) AS t ON t.EmployeeID = e.EmployeeID
+        ORDER BY e.EmployeeID
+    """)
+
+    employee_orders_territories_freight
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Calculating order count by employee- this matches the original result above
+    ask(northwind_database, """
+        SELECT EmployeeID, count(*) AS order_count
+        FROM orders
+        GROUP BY EmployeeID
+        ORDER BY EmployeeID
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #calculating territory by employee- this matches the original result above
+    ask(northwind_database, """
+        SELECT EmployeeID, count(*) AS territory_count
+        FROM employee_territories
+        GROUP BY EmployeeID
+        ORDER BY EmployeeID
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Calculating freight count alone- this matches the original result above
+    ask(northwind_database, """
+        SELECT EmployeeID, sum(Freight) AS total_freight
+        FROM orders
+        GROUP BY EmployeeID
+        ORDER BY EmployeeID
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
