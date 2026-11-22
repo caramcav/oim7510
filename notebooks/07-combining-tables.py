@@ -624,6 +624,150 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    #looking at specific column names 
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'products'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #looking at specific column names 
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'categories'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Answer for Question D
+
+    USA_categories = ask(northwind_database, """
+        SELECT cat.CategoryName,
+               round(sum(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS revenue, sum(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS revenue_unrounded
+        FROM order_details AS od
+        JOIN orders AS o ON o.OrderID = od.OrderID
+        JOIN products AS p ON p.ProductID = od.ProductID
+        JOIN categories AS cat ON cat.CategoryID = p.CategoryID
+        WHERE o.ShipCountry = 'USA'
+        GROUP BY cat.CategoryName
+        ORDER BY revenue DESC
+    """)
+
+    USA_categories
+    return (USA_categories,)
+
+
+@app.cell
+def _(USA_categories):
+    #sum of unrounded revenuw 
+
+    USA_categories["revenue_unrounded"].sum()
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Going further. Compute revenue by category for each year, and find the category that grew the most.
+    category_year_revenue = ask(northwind_database, """
+        SELECT cat.CategoryName,
+               EXTRACT(YEAR FROM o.OrderDate) AS year,
+               round(sum(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS revenue
+        FROM order_details AS od
+        JOIN orders AS o ON o.OrderID = od.OrderID
+        JOIN products AS p ON p.ProductID = od.ProductID
+        JOIN categories AS cat ON cat.CategoryID = p.CategoryID
+        WHERE o.ShipCountry = 'USA'
+        GROUP BY cat.CategoryName, year
+        ORDER BY cat.CategoryName, year
+    """)
+
+    category_year_revenue
+
+    return (category_year_revenue,)
+
+
+@app.cell
+def _(category_year_revenue):
+    #Add dictionary of dictionaries for yearly revenue results 
+    revenue_by_category = {}
+    for row in category_year_revenue.iter_rows(named=True):
+        category = row["CategoryName"]
+        year = row["year"]
+        revenue = row["revenue"]
+        if category not in revenue_by_category:
+            revenue_by_category[category] = {}
+        revenue_by_category[category][year] = revenue
+
+    revenue_by_category
+    return (revenue_by_category,)
+
+
+@app.cell
+def _(revenue_by_category):
+    #Calculate growth for different categories
+
+    growth_by_category = {}
+    for _category, years in revenue_by_category.items():
+        first_year = min(years.keys())
+        last_year = max(years.keys())
+        growth = round(years[last_year] - years[first_year],2)
+        percent_growth = round(growth / years[first_year] * 100, 1)
+        growth_by_category[_category] = {"growth": growth, "percent_growth": percent_growth}
+
+    growth_by_category
+    return (growth_by_category,)
+
+
+@app.cell
+def _(growth_by_category):
+    #determining highest dollar value growth
+    best_category_dollars = None
+    best_dollars = None
+    for _category, _values in growth_by_category.items():
+        if best_dollars is None or _values["growth"] > best_dollars:
+            best_dollars = _values["growth"]
+            best_category_dollars = _category
+
+    best_category_dollars, best_dollars
+    return
+
+
+@app.cell
+def _(growth_by_category):
+    #determining highest percentage growth
+    best_category_percent = None
+    best_percent = None
+    for _category, _values in growth_by_category.items():
+        if best_percent is None or _values["percent_growth"] > best_percent:
+            best_percent = _values["percent_growth"]
+            best_category_percent = _category
+
+    best_category_percent, best_percent
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Beverages had the highest growth, both in percentage (~75%) and in dollar value ($444,522.25) from 2012 to 2023.
+    """)
+    return
+
+
+@app.cell
+def _():
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
