@@ -346,6 +346,40 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    #Added code to view exact column names for section B below
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'employee_territories'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Added code to view exact column names for section B below
+
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'employees'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Added code to view exact column names for section B below
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'territories'
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -357,6 +391,73 @@ def _(mo):
 
     **Going further.** List the employees with the number of territories each covers, and check that the counts add up to the rows of `employee_territories`. Then find the same four territories with `WHERE NOT EXISTS (...)`.
     """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    ask(northwind_database, """
+        SELECT t.TerritoryID, t.TerritoryDescription, e.EmployeeID
+        FROM territories AS t
+        LEFT JOIN employee_territories AS e
+            ON e.TerritoryID = t.TerritoryID 
+        WHERE e.EmployeeID IS NULL
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Going further question- prior to combination
+    ask(northwind_database, """
+        SELECT emp.EmployeeID, emp.FirstName, emp.LastName, et.TerritoryID
+        FROM employees AS emp
+        LEFT JOIN employee_territories AS et
+            ON et.EmployeeID = emp.EmployeeID
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Going further question
+    number_ter_per_employee = ask(northwind_database, """
+        SELECT emp.EmployeeID, emp.FirstName, emp.LastName, count(et.TerritoryID) AS territory_count
+        FROM employees AS emp
+        LEFT JOIN employee_territories AS et
+            ON et.EmployeeID = emp.EmployeeID
+        GROUP BY emp.EmployeeID, emp.FirstName, emp.LastName
+        ORDER BY territory_count DESC
+    """)
+
+    number_ter_per_employee
+    return (number_ter_per_employee,)
+
+
+@app.cell
+def _(number_ter_per_employee):
+    #The number of rows in the table matches this sum 
+    number_ter_per_employee["territory_count"].sum()
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Adding where not exist
+    ask(northwind_database, """
+        SELECT t.TerritoryID, t.TerritoryDescription
+        FROM territories AS t
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM employee_territories AS et
+            WHERE et.TerritoryID = t.TerritoryID
+        )
+    """)
+    return
+
+
+@app.cell
+def _():
     return
 
 
