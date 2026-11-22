@@ -1154,6 +1154,62 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    #Query for Section I
+    ask(northwind_database, """
+        SELECT CategoryName, revenue
+        FROM (
+            SELECT cat.CategoryName,
+                   round(sum(od.UnitPrice * od.Quantity * (1 - od.Discount)), 2) AS revenue
+            FROM order_details AS od
+            JOIN products AS p ON p.ProductID = od.ProductID
+            JOIN categories AS cat ON cat.CategoryID = p.CategoryID
+            GROUP BY cat.CategoryName
+        ) AS category_totals
+        WHERE revenue > (
+            SELECT avg(revenue)
+            FROM (
+                SELECT sum(od.UnitPrice * od.Quantity * (1 - od.Discount)) AS revenue
+                FROM order_details AS od
+                JOIN products AS p ON p.ProductID = od.ProductID
+                JOIN categories AS cat ON cat.CategoryID = p.CategoryID
+                GROUP BY cat.CategoryID
+            )
+        )
+        ORDER BY revenue DESC
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Going further section: products whose revenue is above average of their own category
+    ask(northwind_database, """
+        SELECT p.ProductName, cat.CategoryName, pr.revenue, ca.avg_category_revenue
+        FROM (
+            SELECT ProductID, sum(UnitPrice * Quantity * (1 - Discount)) AS revenue
+            FROM order_details
+            GROUP BY ProductID
+        ) AS pr
+        JOIN products AS p ON p.ProductID = pr.ProductID
+        JOIN categories AS cat ON cat.CategoryID = p.CategoryID
+        JOIN (
+            SELECT p2.CategoryID, avg(pr2.revenue) AS avg_category_revenue
+            FROM (
+                SELECT ProductID, sum(UnitPrice * Quantity * (1 - Discount)) AS revenue
+                FROM order_details
+                GROUP BY ProductID
+            ) AS pr2
+            JOIN products AS p2 ON p2.ProductID = pr2.ProductID
+            GROUP BY p2.CategoryID
+        ) AS ca ON ca.CategoryID = p.CategoryID
+        WHERE pr.revenue > ca.avg_category_revenue
+        ORDER BY cat.CategoryName, pr.revenue DESC
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
