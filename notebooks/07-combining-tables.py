@@ -924,6 +924,46 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    territory_count = ask(northwind_database, """
+        SELECT t.TerritoryID, t.TerritoryDescription, count(et.EmployeeID) AS employee_count
+        FROM territories AS t
+        LEFT JOIN employee_territories AS et
+            ON et.TerritoryID = t.TerritoryID
+        GROUP BY t.TerritoryID, t.TerritoryDescription
+        ORDER BY employee_count ASC
+    """)
+
+    territory_count
+
+    return (territory_count,)
+
+
+@app.cell
+def _(territory_count):
+    #Confirmed that total number of employee counts agrees with number of rows in employee territories 
+    territory_count["employee_count"].sum()
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Going further section: For each region, the number of territories and the number of them that somebody covers. Based on these qurty results, the Southern region has all four territories that are not covered. 
+
+    ask(northwind_database, """
+        SELECT r.RegionDescription,
+               count(DISTINCT t.TerritoryID) AS total_territories,
+               count(DISTINCT et.TerritoryID) AS covered_territories
+        FROM regions AS r
+        JOIN territories AS t ON t.RegionID = r.RegionID
+        LEFT JOIN employee_territories AS et ON et.TerritoryID = t.TerritoryID
+        GROUP BY r.RegionDescription
+        ORDER BY r.RegionDescription
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
