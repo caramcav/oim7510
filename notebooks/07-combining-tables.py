@@ -218,6 +218,87 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, towns_database):
+    #Section A Question 1
+    ask(towns_database, """
+        SELECT name, income_per_capita_dollars,
+               round(income_per_capita_dollars / 12, 1) AS monthly_income
+        FROM towns
+        ORDER BY monthly_income DESC
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Question 1 Explanation: The total count of rows is the same as the total number of towns since each row represents one town.
+    """)
+    return
+
+
+@app.cell
+def _(ask, towns_database):
+    ask(towns_database, """
+        SELECT table_name FROM information_schema.tables ORDER BY table_name
+    """)
+
+    #tells information about database 
+    return
+
+
+@app.cell
+def _(ask, towns_database):
+    #Getting information on how population column is labeled in town database
+    ask(towns_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'towns'
+    """)
+
+    return
+
+
+@app.cell
+def _(ask, towns_database):
+    #Getting information on how population column is labeled in town database
+    ask(towns_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'counties'
+    """)
+
+    return
+
+
+@app.cell
+def _(ask, towns_database):
+    #Question 2: Add a column with each town's share of its county's population, in percent and rounded to one decimal place, and list the five largest shares. Check yourself: Nantucket 100.0, Boston 84.9, Pittsfield 33.5, Springfield 33.4, Oak Bluffs 25.7.
+
+    ask(towns_database, """
+        SELECT t.name, t.income_per_capita_dollars,
+               round(t.income_per_capita_dollars / 12, 1) AS monthly_income, 
+               t.population,c.population,round(t.population/c.population*100,1) AS Share_of_County_Pop
+        FROM towns as t
+        JOIN counties as c ON t.county = c.name
+        ORDER BY Share_of_County_Pop DESC
+        LIMIT 5
+    """)
+
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Question 3: In the same markdown cell, explain why Nantucket's share is exactly 100.
+
+    Nantucket's share is exactly 100% since it is the only town in the county, therefore it makes up 100% of the population.
+    """)
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -587,7 +668,6 @@ def _(ask, northwind_database):
     ) AS order_totals ON order_totals.OrderID = o.OrderID
     GROUP BY c.Region
     ORDER BY average_ticket_size DESC""")
-
     return
 
 
