@@ -456,11 +456,6 @@ def _(ask, northwind_database):
     return
 
 
-@app.cell
-def _():
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -558,6 +553,53 @@ def _(mo):
     *Check yourself: the USA first, with 573,251.00, and the 21 countries add up to 4,047,470.50, the total in `orders`.*
 
     **Going further.** Build one row per order with its freight and its number of lines, by counting the lines first and joining the counts to `orders`.
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Added code to view exact column names for Order_Details
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'orders'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    country_freights = ask(northwind_database, """
+        SELECT ShipCountry, round(sum(Freight),2) AS total_freight
+        FROM orders
+        GROUP BY ShipCountry
+        ORDER BY total_freight DESC
+    """)
+
+    country_freights
+    return (country_freights,)
+
+
+@app.cell
+def _(country_freights):
+    country_freights["total_freight"].sum()
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Going further part of the question: Build one row per order with its freight and its number of lines, by counting the lines first and joining the counts to orders.
+
+    ask(northwind_database, """
+        SELECT o.OrderID, o.Freight, coalesce(lc.num_lines, 0) AS num_lines
+        FROM orders AS o
+        LEFT JOIN (
+            SELECT OrderID, count(*) AS num_lines
+            FROM order_details
+            GROUP BY OrderID
+        ) AS lc ON lc.OrderID = o.OrderID
+        ORDER BY o.OrderID
     """)
     return
 
