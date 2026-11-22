@@ -1058,6 +1058,86 @@ def _(mo):
     return
 
 
+@app.cell
+def _(ask, northwind_database):
+    #Looking up category information for shippers table 
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'shippers'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Looking up category information for orders table 
+    ask(northwind_database, """
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = 'orders'
+    """)
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Computing number of orders and total freight per company in the 90 days before last Northwind order date- October 28, 2023. 
+
+    company_results = ask(northwind_database, """
+        SELECT s.CompanyName, count(*) AS order_count, round(sum(o.Freight), 2) AS total_freight
+        FROM orders AS o
+        JOIN shippers AS s ON s.ShipperID = o.ShipVia
+        WHERE o.OrderDate >= DATE '2023-10-28' - INTERVAL 90 DAY
+        GROUP BY s.CompanyName
+        ORDER BY order_count DESC
+    """)
+
+    company_results
+    return (company_results,)
+
+
+@app.cell
+def _(company_results):
+    #Checking that total order count is 328
+    company_results["order_count"].sum()
+    return
+
+
+@app.cell
+def _(ask, northwind_database):
+    #Code for Going Further Section
+    shipper_monthly_orders = ask(northwind_database, """
+        SELECT s.CompanyName, EXTRACT(MONTH FROM o.OrderDate) AS month, count(*) AS order_count
+        FROM orders AS o
+        JOIN shippers AS s ON s.ShipperID = o.ShipVia
+        WHERE EXTRACT(YEAR FROM o.OrderDate) = 2023
+        GROUP BY s.CompanyName, month
+        ORDER BY s.CompanyName, month
+    """)
+
+    shipper_monthly_orders
+    return (shipper_monthly_orders,)
+
+
+@app.cell
+def _(shipper_monthly_orders):
+    import altair as alt
+
+    chart = alt.Chart(shipper_monthly_orders).mark_line(point=True).encode(
+        x=alt.X("month:O", title="Month"),
+        y=alt.Y("order_count:Q", title="Total Orders"),
+        color=alt.Color("CompanyName:N", title="Shipper"),
+        tooltip=["CompanyName", "month", "order_count"]
+    ).properties(
+        title="Orders per Shipper by Month (2023)",
+        width=500,
+        height=300
+    )
+    chart
+    return
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -1070,6 +1150,14 @@ def _(mo):
     **In the project:** like scenario A's question 4 and scenario C's question 3.
 
     **Going further.** The products whose revenue is above the average of their own category.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    #Queries for in-Class Question: is there any territories that we put too many employees in? Which customer has biggest and smallest average ticket size
     """)
     return
 
