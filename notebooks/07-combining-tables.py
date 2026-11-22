@@ -763,11 +763,6 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -813,7 +808,7 @@ def _(mo, os, pl):
             return pl.DataFrame(_cursor.fetchall(), schema=_columns, orient="row")
 
     ask_server("SELECT TOP 5 SalesOrderID, OrderDate, Freight FROM Sales.SalesOrderHeader ORDER BY SalesOrderID")
-    return
+    return (ask_server,)
 
 
 @app.cell(hide_code=True)
@@ -836,6 +831,67 @@ def _(mo):
     3. Find the customers in `Sales.Customer` who never placed an order, and the products in `Production.Product` that never sold. *Check yourself: 701 customers and 238 products.*
 
     **Going further.** Answer one question of your own about AdventureWorks that needs three tables, and check it against a total you can get from one of them.
+    """)
+    return
+
+
+@app.cell
+def _(ask_server):
+    #Question 1 
+    ask_server("""
+        SELECT
+            (SELECT count(*) FROM Sales.SalesOrderHeader) AS orders,
+            (SELECT count(*) FROM Sales.SalesOrderDetail) AS order_lines,
+            (SELECT count(*)
+             FROM Sales.SalesOrderHeader AS h
+             JOIN Sales.SalesOrderDetail AS d ON d.SalesOrderID = h.SalesOrderID) AS joined
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Question 1 answer: The join has exactly as many rows as the order_lines count. This is because there is only one order ID associated with each order_line detail, therefore when joined together the table keeps every order line and adds the associated order ID. If there were multiple order IDs for each order line, every potential option would be included in the table and it would be more than the 121,317 rows.
+    """)
+    return
+
+
+@app.cell
+def _(ask_server):
+    #Question 2: Compute the total Freight in Sales.SalesOrderHeader, and the same total after the join. Check yourself: 3,183,430.25, and 78,690,398.20 after the join.
+
+    ask_server("""
+        SELECT
+            (SELECT sum(Freight) FROM Sales.SalesOrderHeader) AS freight,
+            (SELECT sum(h.Freight) FROM Sales.SalesOrderHeader AS h
+            JOIN Sales.SalesOrderDetail AS d ON d.SalesOrderID = h.SalesOrderID) AS freight_after_the_join
+    """)
+    return
+
+
+@app.cell
+def _(ask_server):
+    #Question 3 part 1: Find the customers in Sales.Customer who never placed an order. Check yourself: 701 customers. 
+
+    ask_server("""
+        SELECT count(*) AS customers_without_orders
+        FROM Sales.Customer AS c
+        LEFT JOIN Sales.SalesOrderHeader AS h ON h.CustomerID = c.CustomerID
+        WHERE h.SalesOrderID IS NULL
+    """)
+    return
+
+
+@app.cell
+def _(ask_server):
+    #Question 3 part 2: Find the products in Production.Product that never sold. Check yourself: 238 products.
+
+    ask_server("""
+        SELECT count(*) AS products_never_sold
+        FROM Production.Product AS p
+        LEFT JOIN Sales.SalesOrderDetail AS d ON d.ProductID = p.ProductID
+        WHERE d.SalesOrderDetailID IS NULL
     """)
     return
 
