@@ -1223,6 +1223,7 @@ def _(ask, northwind_database):
     #Answer for in-class question 
     #Question: is there any territories that we put too many employees in? Which customer has biggest and smallest average ticket size
 
+    #Query to calculate average ticket size per region. 
     ask(northwind_database, """ 
     SELECT 'Employees by Region' AS metric, e.Region AS region_value, COUNT(*) AS value
     FROM employees AS e
@@ -1244,19 +1245,32 @@ def _(ask, northwind_database):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    It is not possible to determine which territories have too many employees in a meaningful way. The employees are assigned to specific Territories which correspond to four regions. Those regions(Northern, Southern, Eastern, Western) are different than the "Regions"(ex. Eastern Europe, Scandanavia) in the Customers table, therefore it is not possible to join/relate any customer metrics with the number of employees covering those regions.
+
+    In response to the section question: the customer with the largest average ticket size is FISSA Fabrica Inter. Salchichas S.A.(\$30,448.65) and the customer with the smallest average ticket size is Save-a-lot Markets (\$23,789.82).
+    """)
+    return
+
+
 @app.cell
 def _(ask, northwind_database):
-    ask(northwind_database, """ 
-    SELECT c.Region, round(avg(order_totals.revenue), 2) AS average_ticket_size
-    FROM customers AS c
-    JOIN orders AS o ON o.CustomerID = c.CustomerID
-    JOIN (
-        SELECT OrderID, sum(UnitPrice * Quantity * (1 - Discount)) AS revenue
-        FROM order_details
-        GROUP BY OrderID
-    ) AS order_totals ON order_totals.OrderID = o.OrderID
-    GROUP BY c.Region
-    ORDER BY average_ticket_size DESC""")
+    #Query for answering second part of question: customers with smallest and largest average ticket size
+
+    ask(northwind_database, """
+        SELECT c.CustomerID, c.CompanyName, round(avg(ot.revenue), 2) AS avg_ticket_size
+        FROM customers AS c
+        JOIN orders AS o ON o.CustomerID = c.CustomerID
+        JOIN (
+            SELECT OrderID, sum(UnitPrice * Quantity * (1 - Discount)) AS revenue
+            FROM order_details
+            GROUP BY OrderID
+        ) AS ot ON ot.OrderID = o.OrderID
+        GROUP BY c.CustomerID, c.CompanyName
+        ORDER BY avg_ticket_size DESC
+    """)
     return
 
 
