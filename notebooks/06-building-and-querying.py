@@ -459,7 +459,65 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(ask):
+    #Answer to question 1 of Part D
+    county_count = ask("""
+        SELECT towns.county, count(*) AS computed_towns, counties.towns AS listed_towns
+        FROM towns
+        JOIN counties ON towns.county = counties.name
+        GROUP BY towns.county, counties.towns
+        ORDER BY computed_towns DESC
+    """)
+
+    county_count
+    return
+
+
+@app.cell
+def _(ask):
+    #Calculation for question 2. 
+    ask("""
+        SELECT sum(computed_towns) AS total_towns FROM county_count
+        """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Question 2: Add the counts up. Write in a markdown cell why the sum has to equal the number of rows in towns. Check yourself: 351.
+
+    I used the sum function within SQL to add the total number of towns across all counties, and the result was 351. That number needs to match the number of rows in towns since each town is required to have one and only one county, therefore there should be a row for each town represented in the county table.
+    """)
+    return
+
+
+@app.cell
+def _(ask):
+    #Question 3: for each county, the total population of its towns, and the share of those people living in towns with a bill over $10,000. Use sum() and a CASE WHEN inside it, or two queries. Check yourself: the totals add up to 7,136,171.
+
+    share_over_10000 = ask("""
+        SELECT county,
+        sum(population) AS total_population,
+        sum(CASE WHEN average_single_family_bill_dollars > 10000 THEN population ELSE 0 END) AS high_bill_population,
+        round(100.0 * sum(CASE WHEN average_single_family_bill_dollars > 10000 THEN population ELSE 0 END) / sum(population), 1) AS pct_high_bill
+        FROM towns
+        GROUP BY county
+        ORDER BY pct_high_bill DESC
+    """)
+
+    share_over_10000
+
+    return
+
+
+@app.cell
+def _(ask):
+    #Check for question 3
+
+    ask("""
+        SELECT sum(total_population) AS total_population FROM share_over_10000
+        """)
     return
 
 
@@ -511,7 +569,7 @@ def _(ask, mo, requests):
         _path.write_bytes(_reply.content)
     orders_file = _path.as_posix()
     ask(f"SELECT count(*) AS orders FROM '{orders_file}'")
-    return
+    return (orders_file,)
 
 
 @app.cell(hide_code=True)
@@ -522,6 +580,41 @@ def _(mo):
 
     **Going further.** Rank the countries by freight per order instead, and see which countries move.
     """)
+    return
+
+
+@app.cell
+def _(ask, orders_file):
+    #Question 1: Counting number of countries Northwind shipped orders to
+
+    ask(f"SELECT count(DISTINCT ShipCountry) AS countries FROM '{orders_file}'")
+    return
+
+
+@app.cell
+def _(ask, orders_file):
+    #Question 2: Query with total order count and total_freight summed 
+    ask(f"""
+        SELECT ShipCountry, count(*) AS orders, sum(Freight) AS total_freight
+        FROM '{orders_file}'
+        GROUP BY ShipCountry
+        ORDER BY total_freight DESC
+    """)
+    return
+
+
+@app.cell
+def _(ask, orders_file):
+    #Going further section: ranking by number of orders instead
+
+    ask(f"""
+        SELECT ShipCountry, count(*) AS orders, sum(Freight) AS total_freight
+        FROM '{orders_file}'
+        GROUP BY ShipCountry
+        ORDER BY orders DESC
+    """)
+
+    #Answer: the top 8 countries are in the same order as they were when ordered by total_freight. There are some differences below that point as the total number of orders get closer in value. 
     return
 
 
